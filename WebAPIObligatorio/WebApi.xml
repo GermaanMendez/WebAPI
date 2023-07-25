@@ -1,0 +1,199 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WebAPIObligatorio</name>
+    </assembly>
+    <members>
+        <member name="M:WebAPIObligatorio.Controllers.CabañaController.Get">
+            <summary>
+            Obtiene todas las Cabañas
+            </summary>
+            <returns> 404 Not Found si no existe ninguna cabaña en el sistema 
+            500 ante errores de servidor o base de datos</returns>
+            200 OK si todo sale bien
+        </member>
+        <member name="M:WebAPIObligatorio.Controllers.CabañaController.Get(System.Int32)">
+            <summary>
+            Busca una cabaña por su id
+            </summary>
+            <param name="Id"> Id de la cabaña a buscar </param>
+            <returns>Retornará 400 Bad Request: Si el id es menor igual a 0
+            404 Not Found si no existe ninguna cabaña con ese id
+            500 ante errores de servidor o base de datos</returns>
+            200 OK si todo sale bien
+        </member>
+        <member name="M:WebAPIObligatorio.Controllers.CabañaController.Post(DTOS.CabañaDTO)">
+            <summary>
+            Crea una cabaña
+            </summary>
+            <param name="cabañadto"> Objecto cabaña a crear en formato json </param>
+            <returns>Retornará 400 Bad Request: Si el objeto json no es valido o si el objeto a crear no cumple con las reglas de negocio (ej: tipo de cabaña invaldo)
+            500 ante errores de servidor o base de datos</returns>
+            200 OK si todo sale bien
+        </member>
+        <member name="M:WebAPIObligatorio.Controllers.CabañaController.GETBuscarPorTextoNombre(System.String)">
+            <summary>
+            Retorna las cabañas que en su nombre contegan el texto ingresado
+            </summary>
+            <param name="texto"> Texto a buscar en el nombre </param>
+            <returns>Retornará 400 Bad Request: Si el texto buscado es nulo
+            404 Not Found si no existe ninguna cabaña que contenga ese texto en el nombre
+            500 ante errores de servidor o base de datos</returns>
+            200 OK si todo sale bien
+        </member>
+        <member name="M:WebAPIObligatorio.Controllers.CabañaController.GETBuscarPorCantPersonas(System.Int32)">
+            <summary>
+            Retorna las cabañas que tengan una capacidad mayor o igual a la ingresda
+            </summary>
+            <param name="numero"> Capacidad minima a buscar </param>
+            <returns>Retornará 400 Bad Request: Si el numero es menor o igual a 0
+            404 Not Found si no existe ninguna cabaña con una capacidad mayor o igual a la ingresada
+            500 ante errores de servidor o base de datos</returns>
+            200 OK si todo sale bien
+        </member>
+        <member name="M:WebAPIObligatorio.Controllers.CabañaController.GETBuscarPorTipo(System.Int32)">
+            <summary>
+            Retorna las cabañas que sean del tipo de cabaña ingresdo
+            </summary>
+            <param name="idTipo"> Id del tipo de cabaña a buscar </param>
+            <returns>Retornará 400 Bad Request: Si el Id de tipo es menor o igual a 0
+            404 Not Found si no existe ninguna cabaña de ese tipo
+            500 ante errores de servidor o base de datos</returns>
+            200 OK si todo sale bien
+        </member>
+        <member name="M:WebAPIObligatorio.Controllers.CabañaController.GETListarSoloHabilitadas">
+            <summary>
+            Retorna las cabañas que esten habilitadas
+            </summary>
+            <returns>Retornará  404 Not Found si no existe ninguna cabaña que este habilitada
+            500 ante errores de servidor o base de datos</returns>
+            200 OK si todo sale bien
+        </member>
+        <member name="M:WebAPIObligatorio.Controllers.CabañaController.GETListarPorTipoYMonto(System.Int32)">
+            <summary>
+            Retorna que tengan jacuzzi, que esten disponibles y ademas su costo diario(costo tipo multiplicado por capacidad de la cabaña) sea menor al ingresado
+            </summary>
+            <returns>Retornará  404 Not Found si no existe ninguna cabaña que cumpla con esos requerimientos
+            500 ante errores de servidor o base de datos</returns>
+            200 OK si todo sale bien
+        </member>
+        <member name="M:WebAPIObligatorio.Controllers.MantenimientoController.Get">
+            <summary>
+            Obbtiene todos los mantenmientos en el sistema
+            </summary>
+            <returns>Retornará 404 Not Found: Si no hay ninguno en el sistema
+            500 ante errores de servidor o base de datos</returns>
+            200 OK si todo salio bien
+        </member>
+        <member name="M:WebAPIObligatorio.Controllers.MantenimientoController.Get(System.Int32)">
+            <summary>
+            Obtiene un mantenimiento por su id
+            </summary>
+            <param name="id"> Id del mantenimiento a buscar </param>
+            <returns>Retornará 400 Bad Request: Si el id es menor igual a 0
+            404 Not Found si no existe un mantenimiento con ese id buscado
+            500 ante errores de servidor o base de datos</returns>
+            200 OK si todo sale bien
+        </member>
+        <member name="M:WebAPIObligatorio.Controllers.MantenimientoController.Post(DTOS.MantenimientoDTO)">
+            <summary>
+            Crea un Mantenimiento
+            </summary>
+            <param name="mantenimientodto"> Objeto Mantenimiento  a crear en formato json </param>
+            <returns>Retornará 400 Bad Request: si el mantenimiento a crear es nulo o no se cumple con las reglas de negocio (ej: costo mayor a 0)
+            500 ante errores de servidor o base de datos</returns>
+            200 OK si todo sale bien
+        </member>
+        <member name="M:WebAPIObligatorio.Controllers.MantenimientoController.GETListarPorCabaña(System.Int32)">
+            <summary>
+            Obtiene todos los mantenimientos realizados para una cabaña
+            </summary>
+            <param name="NumeroHabitacion"> Id de la cabaña  </param>
+            <returns>Retornará 400 Bad Request: Si el id es menor igual a 0
+            404 Not Found si no existe ningun mantenimiento para esa cabaña
+            500 ante errores de servidor o base de datos</returns>
+            200 OK si todo sale bien
+        </member>
+        <member name="M:WebAPIObligatorio.Controllers.MantenimientoController.GETListarMantenimientosPorFecha(System.Int32,System.DateTime,System.DateTime)">
+            <summary>
+            Obtiene los mantenimientos realizados a una cabaña filtrados por fecha
+            </summary>
+            <param name="Id"> Id de la cabaña </param>
+            <param name="fecha1"> Fecha minima </param>
+            <param name="fecha2"> Fecha maxima </param>
+            <returns>Retornará 400 Bad Request: Si el id es menor igual a 0 o si las fechas no son validas
+            404 Not Found si no existe ningun mantenimiento para esa cabaña en ese rango de fechas
+            500 ante errores de servidor o base de datos</returns>
+            200 OK si todo sale bien
+        </member>
+        <member name="M:WebAPIObligatorio.Controllers.MantenimientoController.GETListarMantenimientosPorValores(System.Double,System.Double)">
+            <summary>
+            Obtiene los mantenimientos realizados a cabañas filtrados por la capacidad de las cabañas
+            </summary>
+            <param name="valor1"> Valor minimo</param>
+            <param name="valor2"> Valor maximo </param>
+            <returns>Retornará 400 Bad Request: Si los valores ingresados no son validos
+            404 Not Found si no existe ningun mantenimiento para ese rango de valores
+            500 ante errores de servidor o base de datos</returns>
+            200 OK si todo sale bien
+        </member>
+        <member name="M:WebAPIObligatorio.Controllers.TipoCabañaController.Get">
+            <summary>
+            Trae todos los tipos de cabañas
+            </summary>
+            <returns>Retornará 404 Not Found si no hay ningun tipo de cabaña registrado
+            500 ante errores de servidor o base de datos y 200 OK si todo salio bien</returns>
+        </member>
+        <member name="M:WebAPIObligatorio.Controllers.TipoCabañaController.Get(System.Int32)">
+            <summary>
+            Obtiene un tipo de cabaña por su id
+            </summary>
+            <param name="id"> Id del tipo de cabaña que se quiere buscar</param>
+            <returns>Retornará 400 Bad Request: Si el id es no es valido (ej: menor a 0)
+            404 Not Found si no existe ningun tipo de cabaña con ese id
+            500 ante errores de servidor o base de datos</returns>
+            200 OK si se encontro correctamente el tipo de cabañá
+        </member>
+        <member name="M:WebAPIObligatorio.Controllers.TipoCabañaController.Post(DTOS.TipoCabañaDTO)">
+            <summary>
+            Crea un Tipo de Cabaña
+            </summary>
+            <param name="tipoCabañaDto"> Objeto tipo de cabaña a crear en formato json </param>
+            <returns>Retornará 404 Bad Request: Si el objeto a crear es nulo, si no se cumple con las reglas de negocio(ej: caracteres minimos desc)
+            500 ante errores de servidor o base de datos y 201 si se creó correctamente</returns>
+        </member>
+        <member name="M:WebAPIObligatorio.Controllers.TipoCabañaController.Put(System.Int32,DTOS.TipoCabañaDTO)">
+            <summary>
+            Edita un Tipo de Cabaña
+            </summary>
+            <param name="id"> Id de tipo int correspondiente al id  del tipo de cabaña a editar </param>
+            <param name="tipoCabañaDto"> Objeto tipo de cabaña a editar en formato json </param>
+            <returns>Retornará 404 Bad Request: Si el id es  y el tipo no son validos o si no se cumplen con las reglas de negocio (ej: minimo de caracatertes en desc)
+            500 ante errores de servidor o base de datos</returns>
+        </member>
+        <member name="M:WebAPIObligatorio.Controllers.TipoCabañaController.Delete(System.Int32)">
+            <summary>
+            Elimina un Tipo de Cabaña
+            </summary>
+            <param name="id"> Id de tipo int correspondiente al id  del tipo de cabaña a borrar </param>
+            <returns>Retornará 404 Bad Request: Si el id es  menor igual a 0 o el tipo no puede ser eliminado por alguna regla de negocio(ej: es usado por una cabañá)
+            404 Not Found si el tipo de cabaña no existe, 500 error servidor, 204 no content si se borrro correctamente</returns>
+        </member>
+        <member name="M:WebAPIObligatorio.Controllers.TipoCabañaController.GETBuscarPoroNombre(System.String)">
+            <summary>
+            Busca un tipo de cabaña por nombre
+            </summary>
+            <param name="nombre"> nombre de tipo string correspondiente al nombre  del tipo de cabaña a buscar </param>
+            <returns>Retornará 400 Bad Request: Si el nombre es nulo 
+            404 Not Found si no existe hay un tipo con ese nombre, 500 error servidor, 201 si todo salio bien</returns>
+        </member>
+        <member name="M:WebAPIObligatorio.Controllers.UsuarioController.Login(DTOS.UsuarioDTO)">
+            <summary>
+            Login de usuario
+            </summary>
+            <param name="usu"> Objeto usuario a loguearse en formato json </param>
+            <returns>Retornará 200 OK: si el usuariio se logueo correctamente
+            401 Unauthorized  si los datos de logueo (ej: contrseña) son incorrectos</returns>
+        </member>
+    </members>
+</doc>
