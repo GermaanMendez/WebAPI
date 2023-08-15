@@ -30,6 +30,9 @@ namespace Datos.ContextoEF
             //VALUE OBJECTS DE USUARIO
             modelBuilder.Entity<Usuario>().OwnsOne(usu => usu.Email, emailVO => emailVO.HasIndex(emailVO => emailVO.Valor).IsUnique());
             modelBuilder.Entity<Usuario>().OwnsOne(usu => usu.Contraseña);
+            modelBuilder.Entity<Usuario>().OwnsOne(usu => usu.Nombre);
+            modelBuilder.Entity<Usuario>().OwnsOne(usu => usu.Apellido);
+            modelBuilder.Entity<Usuario>().OwnsOne(usu => usu.Rol);
         }
     }
 }

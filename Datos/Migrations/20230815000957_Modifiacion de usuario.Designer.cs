@@ -4,6 +4,7 @@ using Datos.ContextoEF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Datos.Migrations
 {
     [DbContext(typeof(LibreriaContexto))]
-    partial class LibreriaContextoModelSnapshot : ModelSnapshot
+    [Migration("20230815000957_Modifiacion de usuario")]
+    partial class Modifiaciondeusuario
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -285,23 +288,6 @@ namespace Datos.Migrations
                                 .HasForeignKey("UsuarioId");
                         });
 
-                    b.OwnsOne("Dominio_Interfaces.ValueObjects.Usuario.RolVO", "Rol", b1 =>
-                        {
-                            b1.Property<int>("UsuarioId")
-                                .HasColumnType("int");
-
-                            b1.Property<string>("Valor")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.HasKey("UsuarioId");
-
-                            b1.ToTable("Usuarios");
-
-                            b1.WithOwner()
-                                .HasForeignKey("UsuarioId");
-                        });
-
                     b.Navigation("Apellido")
                         .IsRequired();
 
@@ -312,9 +298,6 @@ namespace Datos.Migrations
                         .IsRequired();
 
                     b.Navigation("Nombre")
-                        .IsRequired();
-
-                    b.Navigation("Rol")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

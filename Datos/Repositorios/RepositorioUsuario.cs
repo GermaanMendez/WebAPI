@@ -38,5 +38,41 @@ namespace Datos.Repositorios
                 throw new ExcepcionesUsuario("No existe un usuario con el Email ingresado, intentelo de nuevo.");
             }
         }
+
+        public Usuario RegistrarUsuario(Usuario nuevoUsuario)
+        {
+            if(nuevoUsuario==null)
+            {
+                throw new ExcepcionesUsuario("Los datos para el registro no pueden ser nulos");
+            }
+            else
+            {
+                try
+                {
+                    var existeUsuario = Contexto.Usuarios.FirstOrDefault(usuario => usuario.Email.Valor == nuevoUsuario.Email.Valor);
+                    if (existeUsuario == null) {
+                            Contexto.Usuarios.Add(nuevoUsuario);
+                            Contexto.SaveChanges();
+                            string mailNuevo = nuevoUsuario.Email.Valor.ToLower();
+                            var usuarioAgregado = Contexto.Usuarios.FirstOrDefault(usuario => usuario.Email.Valor == mailNuevo);
+                            return usuarioAgregado;
+                    }
+                    else
+                    {
+                        throw new ExcepcionesUsuario("Ya existe un usuario con ese email");
+                    }
+                }
+                catch (ExcepcionesBaseDeDatos ex)
+                {
+                    throw new ExcepcionesBaseDeDatos("Error:" + ex.Message);
+                }
+            }
+        }
+
+        public IEnumerable<Usuario> GetAllUsuarios()
+        {
+            var resultado = Contexto.Usuarios.ToList();
+            return resultado;
+        }
     }
 }

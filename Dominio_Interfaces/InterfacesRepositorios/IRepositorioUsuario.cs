@@ -10,5 +10,7 @@ namespace Dominio_Interfaces.InterfacesRepositorios
     public interface IRepositorioUsuario
     {
         Usuario IniciarSesion(string mail, string contraseña);
+        Usuario RegistrarUsuario(Usuario nuevo);
+        IEnumerable<Usuario> GetAllUsuarios();
     }
 }

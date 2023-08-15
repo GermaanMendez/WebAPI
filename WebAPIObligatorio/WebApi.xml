@@ -195,5 +195,13 @@
             <returns>Retornará 200 OK: si el usuariio se logueo correctamente
             401 Unauthorized  si los datos de logueo (ej: contrseña) son incorrectos</returns>
         </member>
+        <member name="M:WebAPIObligatorio.Controllers.UsuarioController.Registro(DTOS.UsuarioDTO)">
+            <summary>
+            Registro de usuario
+            </summary>
+            <param name="usu"> Objeto usuario a registrarse en formato json </param>
+            <returns>Retornará 200 OK: si el usuariio se logueo correctamente
+            400 BadRequest  si los datos de logueo (ej: contrseña) son incorrectos</returns>
+        </member>
     </members>
 </doc>

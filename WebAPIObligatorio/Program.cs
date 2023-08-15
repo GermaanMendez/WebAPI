@@ -58,6 +58,7 @@ builder.Services.AddScoped<IRepositorioCabaña, RepositorioCabaña>();
 builder.Services.AddScoped<IRepositorioMantenimiento, RepositorioMantenimiento>();
 builder.Services.AddScoped<IRepositorioTipoCabaña, RepositorioTipoCabaña>();
 builder.Services.AddScoped<IRepositorioParametros, RepositorioParametros>();
+builder.Services.AddScoped<IRepositorioUsuario, RepositorioUsuario>();
 //INYECCION Casos de uso cabaña
 builder.Services.AddScoped<IAltaCabaña, CU_AltaCabaña>();
 builder.Services.AddScoped<IListarPorCantPersonas, CU_ListarPorCantPersonas>();
@@ -81,10 +82,10 @@ builder.Services.AddScoped<IListarMantenimientoPorCabañaYFecha, CU_ListarManteni
 builder.Services.AddScoped<IObtenerMantenimientos, CU_ObtenerMantenimientos>();
 builder.Services.AddScoped<IBuscarMantenimientoPorId, CU_ObtenerMantenimientoPorId>();
 builder.Services.AddScoped<IObtenerMantenimientosPorValores, CU_ObtenerMantenimientosPorValores>();
-
 //Usuarios
-builder.Services.AddScoped<IRepositorioUsuario, RepositorioUsuario>();
 builder.Services.AddScoped<I_iniciarSesionUsuario, CU_IniciarSesionUsuario>();
+builder.Services.AddScoped<I_RegistrarUsuario, CU_RegistrarUsuario>();
+builder.Services.AddScoped<I_ListarUsuarios, CU_ListarUsuarios>();
 //Parametros
 builder.Services.AddScoped<IObtenerValorParam, CU_ObtenerValorParametro>();
 
