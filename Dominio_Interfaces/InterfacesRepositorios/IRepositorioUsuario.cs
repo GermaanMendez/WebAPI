@@ -12,5 +12,8 @@ namespace Dominio_Interfaces.InterfacesRepositorios
         Usuario IniciarSesion(string mail, string contraseña);
         Usuario RegistrarUsuario(Usuario nuevo);
         IEnumerable<Usuario> GetAllUsuarios();
+        Usuario GetUsuarioByEmail(string email);
+        Usuario GetUsuarioById(int id);
+        IEnumerable<Cabaña> UserListedCabins(string email);
     }
 }

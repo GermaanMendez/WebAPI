@@ -22,6 +22,38 @@ namespace Datos.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Dominio_Interfaces.EnitdadesNegocio.AlquilerCabaña", b =>
+                {
+                    b.Property<int>("IdAlquiler")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdAlquiler"));
+
+                    b.Property<int>("CabañaId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FechaAlquilerDesde")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaAlquilerHasta")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Precio")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("IdAlquiler");
+
+                    b.HasIndex("CabañaId");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("AlquileresCabañas");
+                });
+
             modelBuilder.Entity("Dominio_Interfaces.EnitdadesNegocio.Cabaña", b =>
                 {
                     b.Property<int>("NumeroHabitacion")
@@ -46,9 +78,17 @@ namespace Datos.Migrations
                     b.Property<bool>("PoseeJacuzzi")
                         .HasColumnType("bit");
 
+                    b.Property<int>("PrecioPorDia")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UsuarioId")
+                        .HasColumnType("int");
+
                     b.HasKey("NumeroHabitacion");
 
                     b.HasIndex("IdTipoCabaña");
+
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Cabañas");
                 });
@@ -93,9 +133,6 @@ namespace Datos.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<double>("CostoPorHuesped")
-                        .HasColumnType("float");
 
                     b.Property<string>("Descripcion")
                         .IsRequired()
@@ -147,6 +184,25 @@ namespace Datos.Migrations
                     b.ToTable("Parametros");
                 });
 
+            modelBuilder.Entity("Dominio_Interfaces.EnitdadesNegocio.AlquilerCabaña", b =>
+                {
+                    b.HasOne("Dominio_Interfaces.EnitdadesNegocio.Cabaña", "Cabaña")
+                        .WithMany()
+                        .HasForeignKey("CabañaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Dominio_Interfaces.EnitdadesNegocio.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cabaña");
+
+                    b.Navigation("Usuario");
+                });
+
             modelBuilder.Entity("Dominio_Interfaces.EnitdadesNegocio.Cabaña", b =>
                 {
                     b.HasOne("Dominio_Interfaces.EnitdadesNegocio.TipoCabaña", "TipoCabaña")
@@ -154,6 +210,10 @@ namespace Datos.Migrations
                         .HasForeignKey("IdTipoCabaña")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Dominio_Interfaces.EnitdadesNegocio.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId");
 
                     b.OwnsOne("Dominio_Interfaces.ValueObjects.Cabaña.DescripcionCabaña", "Descripcion", b1 =>
                         {
@@ -199,6 +259,8 @@ namespace Datos.Migrations
                         .IsRequired();
 
                     b.Navigation("TipoCabaña");
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("Dominio_Interfaces.EnitdadesNegocio.Mantenimiento", b =>

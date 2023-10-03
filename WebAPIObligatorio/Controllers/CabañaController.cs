@@ -1,6 +1,9 @@
-﻿using CasosUso.CU_Cabaña.InterfacesCU;
+﻿using CasosUso.CU_Cabaña.CasosUso;
+using CasosUso.CU_Cabaña.InterfacesCU;
 using CasosUso.CU_Parametros;
+using CasosUso.CU_TipoCabaña.CasosUso;
 using CasosUso.CU_TipoCabaña.InterfacesCU;
+using CasosUso.CU_Usuario.CUInterfaces;
 using Dominio_Interfaces.EnitdadesNegocio;
 using Dominio_Interfaces.ExepcionesPropias;
 using Dominio_Interfaces.ValueObjects.Cabaña;
@@ -8,6 +11,7 @@ using DTOS;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Runtime.Intrinsics.X86;
 using System.Threading;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -22,22 +26,25 @@ namespace WebAPIObligatorio.Controllers
     public class CabañaController : ControllerBase
     {
         IAltaCabaña CU_AltaCabaña { get; set; }
+        IEliminarCabaña CU_EliminarCabaña { get; set; } 
         IListarPorCantPersonas CU_ListarPorCantPersonas { get; set; }
         IListarPorHabilitadas CU_ListarPorHabilitadas { get; set; }
         IListarPorTexto CU_ListarPorTexto { get; set; }
         IListarPorTipo CU_ListarPorTipo { get; set; }
         IListarTodas CU_ListarTodas { get; set; }
-        IListarPorTipoYMonto CU_ListarPorTipoYMonto { get; set; }
+        IListarPorMonto CU_ListarPorTipoYMonto { get; set; }
         IBuscarCabañaPorid CU_buscarCabañaPorId { get; set; }
 
         IListarTiposCabañas CU_ListarTiposCabañas { get; set; }
-
+        IListarEnRangoFechas CU_ListarDisponiblesEnRango { get; set; }
         IObtenerValorParam CU_ObtenerValorParametro { get; set; }
+        IGetUsuarioByEmail CU_ObtenerUsuarioPorEmail { get; set; }
         public IWebHostEnvironment WHE { get; set; }
         public CabañaController(IAltaCabaña cuAlta, IListarPorCantPersonas cuListPers, IListarPorHabilitadas cuListHab, IListarPorTexto cuLisTxt, IListarPorTipo cuListTipo, IListarTodas cuListAll, IWebHostEnvironment wheParam, IListarTiposCabañas cuListarTipos,
-        IObtenerValorParam cuParam, IBuscarCabañaPorid cuBuscarCabaId , IListarPorTipoYMonto cuTipoMonto)
+        IObtenerValorParam cuParam, IBuscarCabañaPorid cuBuscarCabaId , IListarPorMonto cuTipoMonto, IGetUsuarioByEmail cuUsuarioEmail, IEliminarCabaña cU_EliminarCabaña, IListarEnRangoFechas cU_ListarDisponiblesEnRango)
         {
             CU_AltaCabaña = cuAlta;
+            CU_EliminarCabaña = cU_EliminarCabaña;
             CU_ListarPorCantPersonas = cuListPers;
             CU_ListarPorHabilitadas = cuListHab;
             CU_ListarPorTexto = cuLisTxt;
@@ -48,11 +55,11 @@ namespace WebAPIObligatorio.Controllers
             CU_ObtenerValorParametro = cuParam;
             CU_buscarCabañaPorId = cuBuscarCabaId;
             CU_ListarPorTipoYMonto = cuTipoMonto;
-
+            CU_ObtenerUsuarioPorEmail = cuUsuarioEmail;
+            CU_ListarDisponiblesEnRango = cU_ListarDisponiblesEnRango;
 
             DescripcionCabaña.CantMinCarDescripcionCabaña = int.Parse(CU_ObtenerValorParametro.ValorParametro("CantMinCarDescripcionCabaña"));
             DescripcionCabaña.CantMaxCarDescripcionCabaña = int.Parse(CU_ObtenerValorParametro.ValorParametro("CantMaxCarDescripcionCabaña"));
-
         }
 
 
@@ -135,8 +142,8 @@ namespace WebAPIObligatorio.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         #endregion
         [HttpPost]
-        [Authorize]
-        public IActionResult Post([FromBody] CabañaDTO ? cabañadto)// CREATE
+        //[Authorize]
+        public IActionResult Post([FromBody] CabañaNuevaDTO ? cabañadto)// CREATE
         {
             if (cabañadto == null) return BadRequest("No se puede crear una cabaña vacia");
             try
@@ -151,6 +158,38 @@ namespace WebAPIObligatorio.Controllers
             catch 
             {
                 return StatusCode(500,"Ocurrio un error inesperado");
+            }
+        }
+        [HttpDelete("{emailDueño}+{idCabañaABorraar}")]
+        //[Authorize]
+        public IActionResult Delete(string emailDueño, int idCabañaABorraar)
+        {
+            if (string.IsNullOrEmpty(emailDueño) || idCabañaABorraar <= 0) return BadRequest("Se debe proporcionar una cabaña y un dueño para borrar");
+            try
+            {
+                CabañaDTO buscada = CU_buscarCabañaPorId.buscarPorId(idCabañaABorraar);
+                if (buscada == null)
+                {
+                    return BadRequest("La cabaña con id: " + idCabañaABorraar + " no existe en el sistema.");
+                }
+                Usuario dueño = CU_ObtenerUsuarioPorEmail.GetUsuarioByEmail(emailDueño);
+                if (dueño == null)
+                {
+                    return BadRequest("El usuario con email: " + emailDueño + " no existe.");
+                }
+                    try
+                    {
+                        CU_EliminarCabaña.EliminarCabaña(emailDueño, idCabañaABorraar);
+                        return Ok();
+                    }
+                    catch (ExcepcionesCabaña ex)
+                    {
+                        return BadRequest("No se pudo eliminar la cabaña Error: " + ex.Message);
+                    }
+            }
+            catch
+            {
+                return StatusCode(500, "Ocurrio un error inesperado");
             }
         }
 
@@ -274,9 +313,6 @@ namespace WebAPIObligatorio.Controllers
                 return StatusCode(500, "Ocurrio un error inesperado");
             }
         }
-
-
-        //---NUEVAS CONSULTAS PARA OBLIGATORIOR 2-----
         #region DOCUMENTACION API
         /// <summary>
         /// Retorna que tengan jacuzzi, que esten disponibles y ademas su costo diario(costo tipo multiplicado por capacidad de la cabaña) sea menor al ingresado
@@ -290,11 +326,11 @@ namespace WebAPIObligatorio.Controllers
         #endregion
 
         [HttpGet("Monto/{monto}")]
-        public IActionResult GETListarPorTipoYMonto( int monto)
+        public IActionResult GETListarPorMonto( int monto)
         {
             try
             {
-                IEnumerable<CabañaDTO> cabañasdtos = CU_ListarPorTipoYMonto.ListarCabañasPorTipoYMonto(monto);
+                IEnumerable<CabañaDTO> cabañasdtos = CU_ListarPorTipoYMonto.ListarCabañasPorMonto(monto);
                 if (!cabañasdtos.Any()) return NotFound("No hay ninguna cabaña que cumpla con los filtros seleccionado ");
                 return Ok(cabañasdtos);
             }
@@ -304,7 +340,21 @@ namespace WebAPIObligatorio.Controllers
             }
         }
 
+        [HttpGet("desde/{desde}/hasta{hasta}")]
+        public IActionResult GETListarHabilitadasEnRangoFechas(DateTime desde,DateTime hasta)
+        {
+            try
+            {
+                IEnumerable<CabañaDTO> cabañasdtos = CU_ListarDisponiblesEnRango.ListarEnRangoFechas(desde,hasta);
+                if (!cabañasdtos.Any()) return NotFound("No hay cabañas disponibles para alquilar en ese rango de fechas");
+                return Ok(cabañasdtos);
+            }
+            catch
+            {
+                return StatusCode(500, "Ocurrio un error inesperado");
+            }
+        }
 
-     
+
     }
 }

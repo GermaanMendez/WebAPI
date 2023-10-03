@@ -14,17 +14,19 @@ namespace CasosUso.CU_Cabaña.CasosUso
     public class CU_AltaCabaña : IAltaCabaña
     {
         IRepositorioCabaña RepoCabaña { get; set; }
-        IRepositorioParametros RepoParam { get; set; }
-        public CU_AltaCabaña(IRepositorioCabaña repoCab, IRepositorioParametros repoParam)
+        IRepositorioUsuario RepoUsu { get; set; }
+        public CU_AltaCabaña(IRepositorioCabaña repoCab, IRepositorioUsuario rpoU)
         {
-            RepoCabaña = repoCab;  
-            RepoParam = repoParam;
+            RepoCabaña = repoCab;
+            RepoUsu = rpoU;
         }
-        public void AltaCabaña(CabañaDTO nuevo)
+        public void AltaCabaña(CabañaNuevaDTO nuevo)
         {
             try
             {
                 Cabaña nuevaCabaña = nuevo.ToCabaña();
+                Usuario dueño = RepoUsu.GetUsuarioById(nuevo.IdUsuario);
+                nuevaCabaña.Usuario = dueño;
                 nuevaCabaña.Validar();
                 RepoCabaña.Add(nuevaCabaña);
                 nuevo.NumeroHabitacion = nuevaCabaña.NumeroHabitacion;

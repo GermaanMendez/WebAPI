@@ -68,11 +68,36 @@ namespace Datos.Repositorios
                 }
             }
         }
+            public Usuario GetUsuarioByEmail(string email)
+            {
+                var resultado = Contexto.Usuarios.Where(usu => usu.Email.Valor.ToLower() == email.ToLower()).FirstOrDefault();
+                return resultado;
+            }
+            public Usuario GetUsuarioById(int id)
+            {
+                var resultado = Contexto.Usuarios.Where(usu => usu.Id==id).FirstOrDefault();
+                return resultado;
+            }
+            public IEnumerable<Usuario> GetAllUsuarios()
+            {
+                var resultado = Contexto.Usuarios.ToList();
+                return resultado;
+            }
 
-        public IEnumerable<Usuario> GetAllUsuarios()
-        {
-            var resultado = Contexto.Usuarios.ToList();
-            return resultado;
-        }
+            public IEnumerable<Cabaña> UserListedCabins(string email)
+            {
+                if (string.IsNullOrEmpty(email))
+                {
+                    throw new ExcepcionesUsuario("The provided email is null");
+                }
+                else
+                {
+                   Usuario owner = Contexto.Usuarios.Where(usu => usu.Email.Valor.ToLower() == email.ToLower()).FirstOrDefault();
+                if (owner == null) { throw new ExcepcionesUsuario("The user doesn't exists in the system"); }
+
+                    var result = Contexto.Cabañas.Where(cab => cab.Usuario.Id== owner.Id).ToList();
+                    return result;
+                }
+            }
     }
 }

@@ -28,7 +28,6 @@ namespace CasosUso.CU_TipoCabaña.CasosUso
                 Id = mant.Id,
                 Nombre = mant.Nombre,
                 Descripcion = mant.Descripcion,
-                CostoPorHuesped = mant.CostoPorHuesped,
             }); ;
         }
 

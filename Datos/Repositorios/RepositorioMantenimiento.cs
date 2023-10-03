@@ -158,5 +158,48 @@ namespace Datos.Repositorios
                 throw new ExcepcionesBaseDeDatos("Error al conectarse con la base de datos" + ex.Message);
             }
         }
+
+        public void AddMaintenance(Mantenimiento obj, string email)
+        {
+            try
+            {
+                var owner = Contexto.Usuarios.Where(usu => usu.Email.Valor.ToLower() == email.ToLower()).FirstOrDefault();
+                if (owner == null)
+                {
+                    throw new ExcepcionesMantenimiento("The user that is trying add a new maintenance doesn't exists in the system");
+                }
+                else
+                {
+                    var cabinToAddMaintenance = Contexto.Cabañas.Include(cab=>cab.Usuario).Where(cab => cab.NumeroHabitacion == obj.IdCabaña).FirstOrDefault();
+                    if (cabinToAddMaintenance == null) { throw new ExcepcionesMantenimiento("La cabania no existeee"); }
+                    if (cabinToAddMaintenance.Usuario.Id==owner.Id)
+                    {
+                        obj.Validar();
+                        var FechaaAgregar = obj.FechaMantenimiento;
+                        var cuantosMantenimientosDiariosTiene = Contexto.Mantenimientos.Where(mant => mant.IdCabaña == obj.IdCabaña && mant.FechaMantenimiento.Year == FechaaAgregar.Year &&
+                                                                mant.FechaMantenimiento.Month == FechaaAgregar.Month && mant.FechaMantenimiento.Day == FechaaAgregar.Day)
+                                                                .Count();
+                        if (cuantosMantenimientosDiariosTiene <= 2)
+                        {
+                            Contexto.Mantenimientos.Add(obj);
+                            Contexto.SaveChanges();
+                        }
+                        else
+                        {
+                            throw new ExcepcionesMantenimiento("No se puede agregar mas de 3 mantenimientos diarios a una misma cabaña");
+                        }
+                    }
+                    else
+                    {
+                        throw new ExcepcionesMantenimiento("El usuario que está intentando agregar un nuevo mantenimiento a la cabaña no es el dueño de la cabaña");
+                    }
+                   
+                }
+            }
+            catch (ExcepcionesBaseDeDatos ex)
+            {
+                throw new ExcepcionesBaseDeDatos("Error al acceder a la base de datos" + ex.Message);
+            }
+        }
     }
 }

@@ -1,3 +1,5 @@
+using CasosUso.CU_AlquilerCabaña.CasosUso;
+using CasosUso.CU_AlquilerCabaña.InterfacesCU;
 using CasosUso.CU_Cabaña.CasosUso;
 using CasosUso.CU_Cabaña.InterfacesCU;
 using CasosUso.CU_Mantenimiento.CasosUso;
@@ -5,7 +7,8 @@ using CasosUso.CU_Mantenimiento.InterfacesCU;
 using CasosUso.CU_Parametros;
 using CasosUso.CU_TipoCabaña.CasosUso;
 using CasosUso.CU_TipoCabaña.InterfacesCU;
-using CasosUso.CU_Usuario;
+using CasosUso.CU_Usuario.CUInterfaces;
+using CasosUso.CU_Usuario.UserCases;
 using Datos.ContextoEF;
 using Datos.Repositorios;
 using Dominio_Interfaces.InterfacesRepositorios;
@@ -59,22 +62,26 @@ builder.Services.AddScoped<IRepositorioMantenimiento, RepositorioMantenimiento>(
 builder.Services.AddScoped<IRepositorioTipoCabaña, RepositorioTipoCabaña>();
 builder.Services.AddScoped<IRepositorioParametros, RepositorioParametros>();
 builder.Services.AddScoped<IRepositorioUsuario, RepositorioUsuario>();
+builder.Services.AddScoped<IRepositorioAlquilerCabaña,RepositorioAlquilerCabaña>() ;
+
 //INYECCION Casos de uso cabaña
 builder.Services.AddScoped<IAltaCabaña, CU_AltaCabaña>();
+builder.Services.AddScoped<IBuscarCabañaPorid, CU_BuscarCabañaPorId>();
+builder.Services.AddScoped<IEliminarCabaña, CU_EliminarCabaña>();
+builder.Services.AddScoped<IListarEnRangoFechas, CU_ListarEnRangoFechas>();
 builder.Services.AddScoped<IListarPorCantPersonas, CU_ListarPorCantPersonas>();
 builder.Services.AddScoped<IListarPorHabilitadas, CU_ListarPorHabilitadas>();
+builder.Services.AddScoped<IListarPorMonto, CU_ListarPorMonto>();
 builder.Services.AddScoped<IListarPorTexto, CU_ListarPorTexto>();
 builder.Services.AddScoped<IListarPorTipo, CU_ListarPorTipo>();
 builder.Services.AddScoped<IListarTodas, CU_ListarTodas>();
-builder.Services.AddScoped<IBuscarCabañaPorid, CU_BuscarCabañaPorId>();
-builder.Services.AddScoped<IListarPorTipoYMonto, CU_ListarPorTipoYMonto>();
 //INYECCION Casos de uso tipo cabañas
-builder.Services.AddScoped<IAltaTipoCabaña, CU_AltaTipoCabaña>();
 builder.Services.AddScoped<IActualizarTipoCabaña, CU_ActualizarTipoCabaña>();
-builder.Services.AddScoped<IBuscarPorNomre, CU_BuscarPorNombre>();
+builder.Services.AddScoped<IAltaTipoCabaña, CU_AltaTipoCabaña>();
 builder.Services.AddScoped<IEliminarTipoCabaña, CU_BajaTipoCabaña>();
-builder.Services.AddScoped<IListarTiposCabañas, CU_ListarTiposCabañas>();
 builder.Services.AddScoped<IBuscarTipoPorId, CU_BuscarPorId>();
+builder.Services.AddScoped<IBuscarPorNomre, CU_BuscarPorNombre>();
+builder.Services.AddScoped<IListarTiposCabañas, CU_ListarTiposCabañas>();
 //INYECCION Casos de uso mantenimientos
 builder.Services.AddScoped<IAltaMantenimiento, CU_AltaMantenimiento>();
 builder.Services.AddScoped<IListarMantenimientoPorCabaña, CU_ListarMantenimientoPorCabaña>();
@@ -82,10 +89,19 @@ builder.Services.AddScoped<IListarMantenimientoPorCabañaYFecha, CU_ListarManteni
 builder.Services.AddScoped<IObtenerMantenimientos, CU_ObtenerMantenimientos>();
 builder.Services.AddScoped<IBuscarMantenimientoPorId, CU_ObtenerMantenimientoPorId>();
 builder.Services.AddScoped<IObtenerMantenimientosPorValores, CU_ObtenerMantenimientosPorValores>();
+//INYECCION Casos de uso Alquileres
+builder.Services.AddScoped<IAltaAlquilerCabaña, CU_AltaAlquilerCabaña>();
+builder.Services.AddScoped<IEliminarAlquilerCabaña, CU_BajaAlquilerCabaña>();
+builder.Services.AddScoped<IEditarAlquilerCabaña, CU_EditarAlquilerCabaña>();
+builder.Services.AddScoped<IBuscarAlquilerPorId, CU_BuscarAlquilerPorId>();
+builder.Services.AddScoped<IListarAlquileresDeMiCabañaDueño, CU_ListarAlquileresDeMiCabañaDueño>();
+builder.Services.AddScoped<IListarAlquileresRealizadosPorUsuario, CU_ListarAlquileresRealizadosPorUsuario>();
 //Usuarios
 builder.Services.AddScoped<I_iniciarSesionUsuario, CU_IniciarSesionUsuario>();
 builder.Services.AddScoped<I_RegistrarUsuario, CU_RegistrarUsuario>();
 builder.Services.AddScoped<I_ListarUsuarios, CU_ListarUsuarios>();
+builder.Services.AddScoped<IGetUsuarioByEmail,CU_GetUsuarioByEmail>();
+builder.Services.AddScoped<IListarCabañasListadasPorDueño, CU_ListarCabañasListadasPorDueño>();
 //Parametros
 builder.Services.AddScoped<IObtenerValorParam, CU_ObtenerValorParametro>();
 
@@ -106,7 +122,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseAuthorization();
+//app.UseAuthorization();
 
 app.MapControllers();
 

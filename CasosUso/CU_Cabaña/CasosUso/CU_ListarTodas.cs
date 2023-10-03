@@ -29,8 +29,11 @@ namespace CasosUso.CU_Cabaña.CasosUso
                 EstaHabilitada = cab.EstaHabilitada,
                 CantidadPersonasMax = cab.CantidadPersonasMax,
                 tipoCabaña=cab.TipoCabaña,
-                IdTipoCabaña = cab.IdTipoCabaña
-               
+                IdTipoCabaña = cab.IdTipoCabaña,
+                Usuario = cab.Usuario,
+                //IdUsuario = cab.IdUsuario,
+                PrecioDiario= cab.PrecioPorDia
+
             });
         }
     }

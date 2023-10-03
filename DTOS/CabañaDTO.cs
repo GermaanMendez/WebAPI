@@ -20,9 +20,13 @@ namespace DTOS
         public bool PoseeJacuzzi { get; set; }
         public bool EstaHabilitada { get; set; }
         public int CantidadPersonasMax { get; set; }
-
+        public int PrecioDiario { get; set; }
         public int IdTipoCabaña { get; set; }
         public TipoCabaña? tipoCabaña { get; set; }
+
+        public int IdUsuario { get; set; }
+        public Usuario? Usuario { get; set; }
+
 
 
         public Cabaña ToCabaña()
@@ -37,7 +41,10 @@ namespace DTOS
                 EstaHabilitada = this.EstaHabilitada,
                 CantidadPersonasMax = this.CantidadPersonasMax,
                 TipoCabaña = this.tipoCabaña,
-                IdTipoCabaña = this.IdTipoCabaña
+                IdTipoCabaña = this.IdTipoCabaña,
+                Usuario = this.Usuario,
+                //IdUsuario=this.IdUsuario,
+                PrecioPorDia=this.PrecioDiario,
             };
         }
     }

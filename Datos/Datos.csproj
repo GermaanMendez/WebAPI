@@ -25,4 +25,8 @@
     <ProjectReference Include="..\ExcepcionesPropias\ExcepcionesPropias.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ContextoEF\" />
+  </ItemGroup>
+
 </Project>

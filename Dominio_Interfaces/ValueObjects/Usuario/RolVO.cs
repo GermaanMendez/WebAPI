@@ -26,7 +26,7 @@ namespace Dominio_Interfaces.ValueObjects.Usuario
             {
                 throw new ExcepcionesUsuario("Rol es obligatorio");
             }
-            if(Valor.ToLower()!="usuario" || Valor.ToLower() != "administrador")
+            if(Valor.ToLower()!="usuario" && Valor.ToLower() != "administrador")
             {
                 throw new ExcepcionesUsuario("Rol es puede ser usuario o administrador");
             }

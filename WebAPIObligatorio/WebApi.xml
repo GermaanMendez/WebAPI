@@ -22,7 +22,7 @@
             500 ante errores de servidor o base de datos</returns>
             200 OK si todo sale bien
         </member>
-        <member name="M:WebAPIObligatorio.Controllers.CabañaController.Post(DTOS.CabañaDTO)">
+        <member name="M:WebAPIObligatorio.Controllers.CabañaController.Post(DTOS.CabañaNuevaDTO)">
             <summary>
             Crea una cabaña
             </summary>
@@ -69,7 +69,7 @@
             500 ante errores de servidor o base de datos</returns>
             200 OK si todo sale bien
         </member>
-        <member name="M:WebAPIObligatorio.Controllers.CabañaController.GETListarPorTipoYMonto(System.Int32)">
+        <member name="M:WebAPIObligatorio.Controllers.CabañaController.GETListarPorMonto(System.Int32)">
             <summary>
             Retorna que tengan jacuzzi, que esten disponibles y ademas su costo diario(costo tipo multiplicado por capacidad de la cabaña) sea menor al ingresado
             </summary>
@@ -95,7 +95,7 @@
             500 ante errores de servidor o base de datos</returns>
             200 OK si todo sale bien
         </member>
-        <member name="M:WebAPIObligatorio.Controllers.MantenimientoController.Post(DTOS.MantenimientoDTO)">
+        <member name="M:WebAPIObligatorio.Controllers.MantenimientoController.Post(DTOS.MantenimientoDTO,System.String)">
             <summary>
             Crea un Mantenimiento
             </summary>
@@ -162,7 +162,7 @@
             <returns>Retornará 404 Bad Request: Si el objeto a crear es nulo, si no se cumple con las reglas de negocio(ej: caracteres minimos desc)
             500 ante errores de servidor o base de datos y 201 si se creó correctamente</returns>
         </member>
-        <member name="M:WebAPIObligatorio.Controllers.TipoCabañaController.Put(System.Int32,DTOS.TipoCabañaDTO)">
+        <member name="M:WebAPIObligatorio.Controllers.TipoCabañaController.Put(System.Int32,DTOS.TipoCabañaDTO,System.String)">
             <summary>
             Edita un Tipo de Cabaña
             </summary>
@@ -171,7 +171,7 @@
             <returns>Retornará 404 Bad Request: Si el id es  y el tipo no son validos o si no se cumplen con las reglas de negocio (ej: minimo de caracatertes en desc)
             500 ante errores de servidor o base de datos</returns>
         </member>
-        <member name="M:WebAPIObligatorio.Controllers.TipoCabañaController.Delete(System.Int32)">
+        <member name="M:WebAPIObligatorio.Controllers.TipoCabañaController.Delete(System.Int32,System.String)">
             <summary>
             Elimina un Tipo de Cabaña
             </summary>

@@ -22,8 +22,10 @@ namespace Dominio_Interfaces.EnitdadesNegocio
         public ContraseñaUsuarioVO Contraseña { get; set; }  
         public NombreUsuarioVO Nombre { get; set; }
         public ApellidoUsuarioVO Apellido { get; set; }
-        public RolVO Rol { get; set; } 
-
+        public RolVO Rol { get; set; }
+        //esto si estaba
+        //public ICollection<Cabaña> CabañasPropias { get; set; }
+       
         public void Validar()
         {
 

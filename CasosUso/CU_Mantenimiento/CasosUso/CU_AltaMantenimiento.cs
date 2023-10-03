@@ -19,11 +19,11 @@ namespace CasosUso.CU_Mantenimiento.CasosUso
             RepoMantenimiento = repo;
         }
 
-        public void AltaMantenimiento(MantenimientoDTO nuevoMantDTO)
+        public void AltaMantenimiento(MantenimientoDTO nuevoMantDTO, string email)
         {
             Mantenimiento nuevoMant = nuevoMantDTO.ToMantenimiento();
             nuevoMant.Validar();
-            RepoMantenimiento.Add(nuevoMant);
+            RepoMantenimiento.AddMaintenance(nuevoMant,email);
             nuevoMantDTO.Id = nuevoMant.Id;
         }
     }

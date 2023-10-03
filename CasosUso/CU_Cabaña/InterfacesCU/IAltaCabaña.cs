@@ -10,6 +10,6 @@ namespace CasosUso.CU_Cabaña.InterfacesCU
 {
     public interface IAltaCabaña
     {
-        void AltaCabaña(CabañaDTO nuevo);
+        void AltaCabaña(CabañaNuevaDTO nuevo);
     }
 }

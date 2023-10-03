@@ -30,12 +30,18 @@ namespace Dominio_Interfaces.EnitdadesNegocio
         public bool EstaHabilitada { get; set; }
         [Display(Name = "Cantidad maxima de personas")]
         public int CantidadPersonasMax { get; set; }
-        
-
-        public TipoCabaña TipoCabaña { get; set; }
+        [Display(Name = "Precio Por Dia")]
+        public int PrecioPorDia { get; set; }
+        public TipoCabaña? TipoCabaña { get; set; }
         [ForeignKey("TipoCabaña")]
         public int IdTipoCabaña { get; set; }
-
+        
+        public Usuario? Usuario { get; set; }
+        //esto no estaba
+        //[ForeignKey("Usuario")]
+        //public int IdUsuario { get; set; }
+        //esto si estba
+        //public ICollection<AlquilerCabaña> Alquileres { get; set; }
         public void Validar()
         {
             if (CantidadPersonasMax<1)

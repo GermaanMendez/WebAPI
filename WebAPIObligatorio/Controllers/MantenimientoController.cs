@@ -1,6 +1,8 @@
 ﻿using CasosUso.CU_Cabaña.CasosUso;
 using CasosUso.CU_Cabaña.InterfacesCU;
 using CasosUso.CU_Mantenimiento.InterfacesCU;
+using CasosUso.CU_Usuario.CUInterfaces;
+using Dominio_Interfaces.EnitdadesNegocio;
 using Dominio_Interfaces.ExepcionesPropias;
 using DTOS;
 using Microsoft.AspNetCore.Authorization;
@@ -20,7 +22,8 @@ namespace WebAPIObligatorio.Controllers
         IObtenerMantenimientos CU_ObtenerMantenimientos { get; set; }
         IBuscarMantenimientoPorId CU_BuscarPorId { get; set; }
         IObtenerMantenimientosPorValores CU_ObtenerMantenimientoPorValores { get; set; }
-        public MantenimientoController(IAltaMantenimiento cualta, IListarMantenimientoPorCabaña cuListPorCabaña, IListarMantenimientoPorCabañaYFecha cuListfecha, IObtenerMantenimientos cuListAll, IBuscarMantenimientoPorId cuBuscarPorid, IObtenerMantenimientosPorValores cU_ObtenerMantenimientoPorValores)
+        IGetUsuarioByEmail CU_GetUserByEmail { get; set; }  
+        public MantenimientoController(IAltaMantenimiento cualta, IListarMantenimientoPorCabaña cuListPorCabaña, IListarMantenimientoPorCabañaYFecha cuListfecha, IObtenerMantenimientos cuListAll, IBuscarMantenimientoPorId cuBuscarPorid, IObtenerMantenimientosPorValores cU_ObtenerMantenimientoPorValores, IGetUsuarioByEmail cuGetUserById)
         {
             CU_AltaMantenimiento = cualta;
             CU_ListarPorCabañaYFecha = cuListfecha;
@@ -28,6 +31,7 @@ namespace WebAPIObligatorio.Controllers
             CU_ObtenerMantenimientos = cuListAll;
             CU_BuscarPorId = cuBuscarPorid;
             CU_ObtenerMantenimientoPorValores = cU_ObtenerMantenimientoPorValores;
+            CU_GetUserByEmail = cuGetUserById;
         }
 
         #region DOCUMENTACION API
@@ -99,14 +103,16 @@ namespace WebAPIObligatorio.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         #endregion
-        [HttpPost]
-        [Authorize]
-        public IActionResult Post([FromBody] MantenimientoDTO? mantenimientodto)// CREATE
+        [HttpPost("{email}")]
+      //  [Authorize]
+        public IActionResult Post([FromBody] MantenimientoDTO? mantenimientodto,string email)// CREATE
         {
-            if (mantenimientodto == null) return BadRequest("No se puede crear un mantenimiento vacio");
+            if (mantenimientodto == null || string.IsNullOrEmpty(email)) return BadRequest("You must provide maintenance to create");
             try
             {
-                CU_AltaMantenimiento.AltaMantenimiento(mantenimientodto);
+                Usuario user = CU_GetUserByEmail.GetUsuarioByEmail(email);
+                if (user == null) { return BadRequest("The user with this Email doesn't exists in the system"); }
+                CU_AltaMantenimiento.AltaMantenimiento(mantenimientodto,email);
                 return CreatedAtRoute("RutaMantDetail", new { id = mantenimientodto.Id }, mantenimientodto);
             }
             catch (ExcepcionesMantenimiento ex)
@@ -165,7 +171,7 @@ namespace WebAPIObligatorio.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         #endregion
 
-        [HttpGet("{Id}+{fecha1}+{fecha2}")]
+        [HttpGet("{Id}/{fecha1}/{fecha2}")]
         public IActionResult GETListarMantenimientosPorFecha(int Id, DateTime fecha1, DateTime fecha2)
         {
             if (Id <= 0) return BadRequest("Se debe ingresar un numero de mantenimiento valido para buscar");
