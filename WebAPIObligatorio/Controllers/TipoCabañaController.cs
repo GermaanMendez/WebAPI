@@ -8,6 +8,8 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Drawing;
 using System.Reflection.Metadata;
 using System.Runtime.ConstrainedExecution;
+using Dominio_Interfaces.EnitdadesNegocio;
+using CasosUso.CU_Usuario.CUInterfaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -23,8 +25,9 @@ namespace WebAPIObligatorio.Controllers
         public IEliminarTipoCabaña CU_EliminarTipo { get; set; }
         public IListarTiposCabañas CU_ListarTipos { get; set; }
         public IBuscarTipoPorId CU_BuscarPorId { get; set; }
+        public IGetUsuarioByEmail CU_GetUserByEmail { get; set; }
 
-        public TipoCabañaController(IActualizarTipoCabaña cuAct, IAltaTipoCabaña cuAlta, IBuscarPorNomre cuBPN, IEliminarTipoCabaña cuBaja, IListarTiposCabañas cuListar, IBuscarTipoPorId cuBuscarId)
+        public TipoCabañaController(IActualizarTipoCabaña cuAct, IAltaTipoCabaña cuAlta, IBuscarPorNomre cuBPN, IEliminarTipoCabaña cuBaja, IListarTiposCabañas cuListar, IBuscarTipoPorId cuBuscarId, IGetUsuarioByEmail cuGetUserEmail)
         {
             CU_ActTipoCabaña = cuAct;
             CU_AltaTipo = cuAlta;
@@ -32,7 +35,7 @@ namespace WebAPIObligatorio.Controllers
             CU_EliminarTipo = cuBaja;
             CU_ListarTipos = cuListar;
             CU_BuscarPorId = cuBuscarId;
-
+            CU_GetUserByEmail=cuGetUserEmail;
         }
 
         #region DOCUMENTACION API
@@ -105,7 +108,7 @@ namespace WebAPIObligatorio.Controllers
         #endregion
         // POST api/<TipoCabañaController>
         [HttpPost]
-        [Authorize]
+     //   [Authorize]
         public IActionResult Post([FromBody] TipoCabañaDTO? tipoCabañaDto)
         {
             if (tipoCabañaDto == null) return BadRequest("No se puede crear un tipo de cabaña nulo");
@@ -138,15 +141,23 @@ namespace WebAPIObligatorio.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         #endregion
         // PUT api/<TipoCabañaController>/5
-        [HttpPut("{id}")]
-        [Authorize]
-        public IActionResult Put(int id, [FromBody] TipoCabañaDTO? tipoCabañaDto)
+        [HttpPut("{id}/{email}")]
+        //[Authorize]
+        public IActionResult Put(int id, [FromBody] TipoCabañaDTO? tipoCabañaDto,string email)
         {
-            if (tipoCabañaDto == null || id!=tipoCabañaDto.Id) return BadRequest("Se debe ingresar un tipo de cabaña valido para poder realizar su edicion");
+            if (tipoCabañaDto == null || id!=tipoCabañaDto.Id|| string.IsNullOrEmpty(email)) return BadRequest("To edit a Type of Cabin you need provide the id of Type Cabin and the email of the user that is doing the changes");
             try
             {
-                CU_ActTipoCabaña.ActualizarTipoCabaña(tipoCabañaDto);
-                return Ok();
+                Usuario user = CU_GetUserByEmail.GetUsuarioByEmail(email);
+                if (user.Rol.Valor.ToLower() != "administrador")
+                {
+                    return BadRequest("The user " + email + " doesn't have the permissions to edit this");
+                }
+                else
+                {
+                   CU_ActTipoCabaña.ActualizarTipoCabaña(tipoCabañaDto);
+                   return Ok();
+                }
             }
             catch (ExcepcionesTipoCabaña ex)
             {
@@ -174,17 +185,25 @@ namespace WebAPIObligatorio.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         #endregion
-        [HttpDelete("{id}")]
-        [Authorize]
-        public IActionResult Delete(int id)
+        [HttpDelete("{id}/{email}")]
+        //[Authorize]
+        public IActionResult Delete(int id,string email)
         {
-            if (id < 0) return BadRequest("El id debe ser un numero entero positivo");
+            if (id < 0 || string.IsNullOrEmpty(email)) return BadRequest("To Delete a Type of Cabin you need provide the id of Type Cabin and the email of the user that is doing the changes");
             try
             {
-                TipoCabañaDTO tipoCabaDto = CU_BuscarPorId.BuscarPorId(id);
-                if (tipoCabaDto == null) return NotFound("El tipo de cabaña que se quiere eliminar no existe en el sistema");
-                CU_EliminarTipo.BajaTipoCabaña(id);
-                return NoContent();
+                Usuario user = CU_GetUserByEmail.GetUsuarioByEmail(email);
+                if (user.Rol.Valor.ToLower() != "administrador")
+                {
+                    return BadRequest("The user " + email + " doesn't have the permissions to delete this");
+                }
+                else
+                {
+                    TipoCabañaDTO tipoCabaDto = CU_BuscarPorId.BuscarPorId(id);
+                    if (tipoCabaDto == null) return NotFound("El tipo de cabaña que se quiere eliminar no existe en el sistema");
+                    CU_EliminarTipo.BajaTipoCabaña(id);
+                    return NoContent();
+                }
             }
             catch (ExcepcionesTipoCabaña ex)
             {

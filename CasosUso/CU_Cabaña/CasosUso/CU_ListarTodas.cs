@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CasosUso.CU_Cabaña.CasosUso
 {
@@ -29,9 +30,13 @@ namespace CasosUso.CU_Cabaña.CasosUso
                 EstaHabilitada = cab.EstaHabilitada,
                 CantidadPersonasMax = cab.CantidadPersonasMax,
                 tipoCabaña=cab.TipoCabaña,
-                IdTipoCabaña = cab.IdTipoCabaña
-               
+                IdTipoCabaña = cab.IdTipoCabaña,
+                Usuario = cab.Usuario,
+                //IdUsuario = cab.IdUsuario,
+                PrecioDiario= cab.PrecioPorDia
+
             });
         }
     }
 }
+

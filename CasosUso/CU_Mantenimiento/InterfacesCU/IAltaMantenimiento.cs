@@ -10,6 +10,6 @@ namespace CasosUso.CU_Mantenimiento.InterfacesCU
 {
     public interface IAltaMantenimiento
     {
-        void AltaMantenimiento(MantenimientoDTO nuevo);
+        void AltaMantenimiento(MantenimientoDTO nuevo,string email);
     }
 }

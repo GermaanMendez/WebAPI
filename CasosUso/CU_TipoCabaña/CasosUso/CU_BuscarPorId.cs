@@ -28,7 +28,6 @@ namespace CasosUso.CU_TipoCabaña.CasosUso
                     Id = buscado.Id,
                     Nombre = buscado.Nombre,
                     Descripcion = buscado.Descripcion,
-                    CostoPorHuesped = buscado.CostoPorHuesped,
                 };
             }
             return dtoBuscado;

@@ -17,10 +17,15 @@ namespace Dominio_Interfaces.EnitdadesNegocio
     {
         [Key]
         public int Id { get; set; }
-
+        
         public EmailUsuarioVO Email { get; set; }
         public ContraseñaUsuarioVO Contraseña { get; set; }  
-
+        public NombreUsuarioVO Nombre { get; set; }
+        public ApellidoUsuarioVO Apellido { get; set; }
+        public RolVO Rol { get; set; }
+        //esto si estaba
+        //public ICollection<Cabaña> CabañasPropias { get; set; }
+       
         public void Validar()
         {
 

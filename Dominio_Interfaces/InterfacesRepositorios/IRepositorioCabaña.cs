@@ -15,6 +15,8 @@ namespace Dominio_Interfaces.InterfacesRepositorios
         IEnumerable<Cabaña> BuscarCabañaPorCantPersonas(int cantPersonas);
         IEnumerable<Cabaña> ObtenerCabañasHabilitadas();
 
-        IEnumerable<Cabaña> ObtenerCabañasPorTipoYMonto( double monto);
+        IEnumerable<Cabaña> ObtenerCabañasMonto( int monto);
+        IEnumerable<Cabaña> ObtenerCabañasDisponiblesEnRangoFecha(DateTime desde, DateTime hasta);
+        bool EliminarCabaña(string emailDueño, int idCabaña);
     }
 }

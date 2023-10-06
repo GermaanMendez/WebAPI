@@ -25,9 +25,6 @@ namespace Dominio_Interfaces.EnitdadesNegocio
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
 
-        [Display(Name = "Costo por huesped")]
-        public double CostoPorHuesped { get; set; }
-
         public void Validar()
         {
             if (string.IsNullOrEmpty(Nombre))
@@ -37,10 +34,6 @@ namespace Dominio_Interfaces.EnitdadesNegocio
             if (string.IsNullOrEmpty(Descripcion))
             {
                 throw new ExcepcionesTipoCabaña("La descripcion no puede estar vacía");
-            }
-            if (CostoPorHuesped<1)
-            {
-                throw new ExcepcionesTipoCabaña("El costo no puede ser menor a 1");
             }
             if (Descripcion.Length < CantMinCarDescripcionTipoCabaña)
             {

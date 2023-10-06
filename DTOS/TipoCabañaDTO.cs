@@ -21,8 +21,6 @@ namespace DTOS
             public string Nombre { get; set; }
             public string Descripcion { get; set; }
 
-            public double CostoPorHuesped { get; set; }
-
 
             public TipoCabaña ToTipoCabaña()
             {
@@ -31,7 +29,6 @@ namespace DTOS
                    Id=this.Id,
                    Nombre=this.Nombre,
                    Descripcion=this.Descripcion,
-                   CostoPorHuesped=this.CostoPorHuesped,
                 };
             }
 
