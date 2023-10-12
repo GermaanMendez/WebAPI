@@ -1,4 +1,6 @@
 ﻿using CasosUso.CU_AlquilerCabaña.InterfacesCU;
+using CasosUso.CU_Cabaña.InterfacesCU;
+using CasosUso.CU_Usuario.CUInterfaces;
 using Dominio_Interfaces.InterfacesRepositorios;
 using DTOS;
 using System;
@@ -12,9 +14,13 @@ namespace CasosUso.CU_AlquilerCabaña.CasosUso
     public class CU_ListarAlquileresDeMiCabañaDueño : IListarAlquileresDeMiCabañaDueño
     {
         IRepositorioAlquilerCabaña RepoAlquiler { get; set; }
-        public CU_ListarAlquileresDeMiCabañaDueño(IRepositorioAlquilerCabaña repo)
+        IConvertUserToDTO ConvertUserToDTO { get; set; }
+        IConvertCabañaToDTO ConvertCabañaToDTO { get; set; }
+        public CU_ListarAlquileresDeMiCabañaDueño(IRepositorioAlquilerCabaña repo, IConvertUserToDTO convert, IConvertCabañaToDTO convertCabaña)
         {
             RepoAlquiler = repo;
+            ConvertUserToDTO = convert;
+            ConvertCabañaToDTO = convertCabaña;
         }
         public IEnumerable<AlquilerCabañaDTO> ListarAlquileresDeMiCabañaDueño(string emailUsuario, int idCabaña)
         {
@@ -24,9 +30,9 @@ namespace CasosUso.CU_AlquilerCabaña.CasosUso
                 FechaAlquilerHasta = alq.FechaAlquilerDesde,
                 Precio = alq.Precio,
                 UsuarioId = alq.UsuarioId,
-                Usuario = alq.Usuario,
+                Usuario = ConvertUserToDTO.ToUsuarioDTO(alq.Usuario),
                 CabañaId = alq.CabañaId,
-                Cabaña = alq.Cabaña
+                Cabaña = ConvertCabañaToDTO.convertCabañaToDTO(alq.Cabaña)
             }) ;
         }
     }

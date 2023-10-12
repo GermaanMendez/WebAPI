@@ -25,7 +25,8 @@ namespace DTOS
         public TipoCabaña? tipoCabaña { get; set; }
 
         public int IdUsuario { get; set; }
-        public Usuario? Usuario { get; set; }
+        public UsuarioDTO? Usuario { get; set; }
+
 
 
 
@@ -42,7 +43,7 @@ namespace DTOS
                 CantidadPersonasMax = this.CantidadPersonasMax,
                 TipoCabaña = this.tipoCabaña,
                 IdTipoCabaña = this.IdTipoCabaña,
-                Usuario = this.Usuario,
+                Usuario = this.Usuario.ToUsuario(),
                 //IdUsuario=this.IdUsuario,
                 PrecioPorDia=this.PrecioDiario,
             };

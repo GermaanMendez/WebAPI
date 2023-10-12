@@ -28,7 +28,7 @@ namespace WebAPIObligatorio.Controllers
         IAltaCabaña CU_AltaCabaña { get; set; }
         IEliminarCabaña CU_EliminarCabaña { get; set; } 
         IListarPorCantPersonas CU_ListarPorCantPersonas { get; set; }
-        IListarPorHabilitadas CU_ListarPorHabilitadas { get; set; }
+        IListarPorNOHabilitadas CU_ListarPorHabilitadas { get; set; }
         IListarPorTexto CU_ListarPorTexto { get; set; }
         IListarPorTipo CU_ListarPorTipo { get; set; }
         IListarTodas CU_ListarTodas { get; set; }
@@ -39,9 +39,15 @@ namespace WebAPIObligatorio.Controllers
         IListarEnRangoFechas CU_ListarDisponiblesEnRango { get; set; }
         IObtenerValorParam CU_ObtenerValorParametro { get; set; }
         IGetUsuarioByEmail CU_ObtenerUsuarioPorEmail { get; set; }
+        IEditarCabaña CU_EditarCabaña { get; set; }
+
+        IBuscarTipoPorId CU_BuscarTipoPorId { get; set; }
+        IHabilitarCabaña CU_HabilitarCabaña { get; set; }
+        IDeshabilitarCabaña CU_DeshabilitarCabaña { get; set; }
         public IWebHostEnvironment WHE { get; set; }
-        public CabañaController(IAltaCabaña cuAlta, IListarPorCantPersonas cuListPers, IListarPorHabilitadas cuListHab, IListarPorTexto cuLisTxt, IListarPorTipo cuListTipo, IListarTodas cuListAll, IWebHostEnvironment wheParam, IListarTiposCabañas cuListarTipos,
-        IObtenerValorParam cuParam, IBuscarCabañaPorid cuBuscarCabaId , IListarPorMonto cuTipoMonto, IGetUsuarioByEmail cuUsuarioEmail, IEliminarCabaña cU_EliminarCabaña, IListarEnRangoFechas cU_ListarDisponiblesEnRango)
+        public CabañaController(IAltaCabaña cuAlta, IListarPorCantPersonas cuListPers, IListarPorNOHabilitadas cuListHab, IListarPorTexto cuLisTxt, IListarPorTipo cuListTipo, IListarTodas cuListAll, IWebHostEnvironment wheParam, IListarTiposCabañas cuListarTipos,
+        IObtenerValorParam cuParam, IBuscarCabañaPorid cuBuscarCabaId , IListarPorMonto cuTipoMonto, IGetUsuarioByEmail cuUsuarioEmail, IEliminarCabaña cU_EliminarCabaña, IListarEnRangoFechas cU_ListarDisponiblesEnRango, IEditarCabaña EditarCabaña, IBuscarTipoPorId cU_BuscarTipoPorId
+            , IHabilitarCabaña cU_HabilitarCabaña, IDeshabilitarCabaña cU_DeshabilitarCabaña)
         {
             CU_AltaCabaña = cuAlta;
             CU_EliminarCabaña = cU_EliminarCabaña;
@@ -57,6 +63,10 @@ namespace WebAPIObligatorio.Controllers
             CU_ListarPorTipoYMonto = cuTipoMonto;
             CU_ObtenerUsuarioPorEmail = cuUsuarioEmail;
             CU_ListarDisponiblesEnRango = cU_ListarDisponiblesEnRango;
+            CU_EditarCabaña = EditarCabaña;
+            CU_BuscarTipoPorId = cU_BuscarTipoPorId;
+            CU_HabilitarCabaña = cU_HabilitarCabaña;
+            CU_DeshabilitarCabaña = cU_DeshabilitarCabaña;
 
             DescripcionCabaña.CantMinCarDescripcionCabaña = int.Parse(CU_ObtenerValorParametro.ValorParametro("CantMinCarDescripcionCabaña"));
             DescripcionCabaña.CantMaxCarDescripcionCabaña = int.Parse(CU_ObtenerValorParametro.ValorParametro("CantMaxCarDescripcionCabaña"));
@@ -88,12 +98,12 @@ namespace WebAPIObligatorio.Controllers
                 }
                 else
                 {
-                    return NotFound("No hay cabañas en el sistema");
+                    return NotFound("There are no cabins in the system");
                 }
             }
             catch
             {
-                return StatusCode(500, "Ocurrio un error inesperado");
+                return StatusCode(500, "An unexpected error occurred");
             }
 
         }
@@ -117,14 +127,14 @@ namespace WebAPIObligatorio.Controllers
         {
             try
             {
-                if (id <= 0) return BadRequest("El id de cabaña debe ser un entero positivo");
+                if (id <= 0) return BadRequest("The cabin id to search must be a number greater than zero");
                 CabañaDTO buscada = CU_buscarCabañaPorId.buscarPorId(id);
-                if (buscada == null) return NotFound($"La cabaña con el id: {id} no existe en el sistema");
+                if (buscada == null) return NotFound($"The Cabin with Id: {id} doesn't exist in the system");
                 return Ok(buscada);
             }
             catch 
             {
-                return StatusCode(500, "Ocurrio un error inesperado");
+                return StatusCode(500, "An unexpected error occurred");
             }
 
         }
@@ -143,9 +153,9 @@ namespace WebAPIObligatorio.Controllers
         #endregion
         [HttpPost]
         //[Authorize]
-        public IActionResult Post([FromBody] CabañaNuevaDTO ? cabañadto)// CREATE
+        public IActionResult Post([FromBody] CabañaDTO? cabañadto)// CREATE
         {
-            if (cabañadto == null) return BadRequest("No se puede crear una cabaña vacia");
+            if (cabañadto == null) return BadRequest("The cabin to create cannot be null");
             try
             {
                 CU_AltaCabaña.AltaCabaña(cabañadto);
@@ -157,9 +167,33 @@ namespace WebAPIObligatorio.Controllers
             }
             catch 
             {
-                return StatusCode(500,"Ocurrio un error inesperado");
+                return StatusCode(500,"An unexpected error occurred");
             }
         }
+        [HttpPut("edit/{email}")]
+        //[Authorize]
+        public IActionResult Put([FromBody] CabañaDTO? cabañaDto, string email)
+        {
+            if (cabañaDto == null|| string.IsNullOrEmpty(email)) return BadRequest("To edit a Cabin you need provide the Cabin and the email of the user that is doing the changes");
+            try
+            {
+                    CU_EditarCabaña.edit(cabañaDto);
+                    return Ok();
+            }
+            catch (ExcepcionesTipoCabaña ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (ExcepcionesBaseDeDatos ex)
+            {
+                return StatusCode(500, "Error connecting to database");
+            }
+            catch
+            {
+                return StatusCode(500, "An unexpected error occurred");
+            }
+        }
+
         [HttpDelete("{emailDueño}+{idCabañaABorraar}")]
         //[Authorize]
         public IActionResult Delete(string emailDueño, int idCabañaABorraar)
@@ -172,7 +206,7 @@ namespace WebAPIObligatorio.Controllers
                 {
                     return BadRequest("La cabaña con id: " + idCabañaABorraar + " no existe en el sistema.");
                 }
-                Usuario dueño = CU_ObtenerUsuarioPorEmail.GetUsuarioByEmail(emailDueño);
+                UsuarioDTO dueño = CU_ObtenerUsuarioPorEmail.GetUsuarioByEmail(emailDueño);
                 if (dueño == null)
                 {
                     return BadRequest("El usuario con email: " + emailDueño + " no existe.");
@@ -189,7 +223,7 @@ namespace WebAPIObligatorio.Controllers
             }
             catch
             {
-                return StatusCode(500, "Ocurrio un error inesperado");
+                return StatusCode(500, "An unexpected error occurred");
             }
         }
 
@@ -210,16 +244,16 @@ namespace WebAPIObligatorio.Controllers
         [HttpGet("texto/{texto}")]
         public IActionResult GETBuscarPorTextoNombre(string texto) //LISTAR POR TEXTO EN EL NOMBRE
         {
-            if (string.IsNullOrEmpty(texto)) return BadRequest("El texto no puede ser nulo");
+            if (string.IsNullOrEmpty(texto)) return BadRequest("The name cannot be null");
             try
             {
                 IEnumerable<CabañaDTO> cabañasdtos = CU_ListarPorTexto.ListarPorTexto(texto.ToLower());
-                if (!cabañasdtos.Any()) return NotFound("No hay ninguna cabaña que su nombre tenga el texto buscado");
+                if (!cabañasdtos.Any()) return NotFound("There is no cabin with that name in the system");
                 return Ok(cabañasdtos);
             }
             catch
             {
-                return StatusCode(500, "Ocurrio un error inesperado");
+                return StatusCode(500, "An unexpected error occurred");
             }
         }
 
@@ -241,16 +275,16 @@ namespace WebAPIObligatorio.Controllers
         [HttpGet("cantidadPersonas/{numero}")]
         public IActionResult GETBuscarPorCantPersonas(int numero)
         {
-            if (numero <= 0) return BadRequest("El numero a buscar debe ser un entero positivo");
+            if (numero <= 0) return BadRequest("The number provided must be a number bigger than zero");
             try
             {
                 IEnumerable<CabañaDTO> cabañasdtos = CU_ListarPorCantPersonas.ListarPorCantPersonas(numero);
-                if (!cabañasdtos.Any()) return NotFound("No hay ninguna cabaña que aloje minimo esa cantidad de personas");
+                if (!cabañasdtos.Any()) return NotFound("There is no cabin that has that capacity for guests.");
                 return Ok(cabañasdtos);
             }
             catch
             {
-                return StatusCode(500, "Ocurrio un error inesperado");
+                return StatusCode(500, "An unexpected error occurred");
             }
         }
 
@@ -273,16 +307,16 @@ namespace WebAPIObligatorio.Controllers
         [HttpGet("tipo/{idTipo}")]
         public IActionResult GETBuscarPorTipo(int idTipo)
         {
-            if (idTipo <= 0) return BadRequest("Se debe ingresar un tipo de cabaña a buscar");
+            if (idTipo <= 0) return BadRequest("Cabin type cannot be null");
             try
             {
                 IEnumerable<CabañaDTO> cabañasdtos = CU_ListarPorTipo.ListarPorTipo(idTipo);
-                if (!cabañasdtos.Any()) return NotFound("No hay ninguna cabaña de ese tipo");
+                if (!cabañasdtos.Any()) return NotFound("There is no cabin with that type of in the system");
                 return Ok(cabañasdtos);
             }
             catch
             {
-                return StatusCode(500, "Ocurrio un error inesperado");
+                return StatusCode(500, "An unexpected error occurred");
             }
         }
 
@@ -299,18 +333,18 @@ namespace WebAPIObligatorio.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         #endregion
-        [HttpGet("Habilitadas")]
-        public IActionResult GETListarSoloHabilitadas()
+        [HttpGet("NOHabilitadas")]
+        public IActionResult GETListarNOHabilitadas()
         {
             try
             {
                 IEnumerable<CabañaDTO> cabañasdtos = CU_ListarPorHabilitadas.ListarCabañasHabilitadas();
-                if (!cabañasdtos.Any()) return NotFound("No hay ninguna cabaña habilitada");
+                if (!cabañasdtos.Any()) return NotFound("There is no cabin that is disabled");
                 return Ok(cabañasdtos);
             }
             catch
             {
-                return StatusCode(500, "Ocurrio un error inesperado");
+                return StatusCode(500, "An unexpected error occurred");
             }
         }
         #region DOCUMENTACION API
@@ -331,12 +365,12 @@ namespace WebAPIObligatorio.Controllers
             try
             {
                 IEnumerable<CabañaDTO> cabañasdtos = CU_ListarPorTipoYMonto.ListarCabañasPorMonto(monto);
-                if (!cabañasdtos.Any()) return NotFound("No hay ninguna cabaña que cumpla con los filtros seleccionado ");
+                if (!cabañasdtos.Any()) return NotFound("There is no cabin with a daily price lower than or equal to the one searched for. ");
                 return Ok(cabañasdtos);
             }
             catch
             {
-                return StatusCode(500, "Ocurrio un error inesperado");
+                return StatusCode(500, "An unexpected error occurred");
             }
         }
 
@@ -345,16 +379,72 @@ namespace WebAPIObligatorio.Controllers
         {
             try
             {
-                if (desde == null || hasta == null) return BadRequest("Se deben proporcionar las fechas");
+                if (desde>hasta ) return BadRequest("The start date cannot be greater than the end date");
                 IEnumerable<CabañaDTO> cabañasdtos = CU_ListarDisponiblesEnRango.ListarEnRangoFechas(desde,hasta);
-                if (!cabañasdtos.Any()) return NotFound("No hay cabañas disponibles para alquilar en ese rango de fechas");
+                if (!cabañasdtos.Any()) return NotFound("There are no cabins available to rent in that date range");
                 return Ok(cabañasdtos);
             }
-            catch(Exception ex )
+            catch (ExcepcionesCabaña ex)
             {
-                return StatusCode(500, "Ocurrio un error inesperado" + ex.Message);
+                return BadRequest(ex.Message);
+            }
+            catch (ExcepcionesBaseDeDatos ex)
+            {
+                return StatusCode(500, "Error connecting to database");
+            }
+            catch (Exception ex )
+            {
+                return StatusCode(500, "An unexpected error occurred" + ex.Message);
             }
         }
+
+        [HttpPost("habilitar/{email}/{idCabaña}")]
+        public IActionResult HabilitarCabaña(string email, int idCabaña)
+        {
+            try
+            {
+                if (email == null || idCabaña <0) return BadRequest("A valid email and cabin must be provided");
+                CU_HabilitarCabaña.HabiliarCabaña(email, idCabaña);
+                return Ok();
+            }
+            catch (ExcepcionesCabaña ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (ExcepcionesBaseDeDatos ex)
+            {
+                return StatusCode(500, "Error connecting to database");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An unexpected error occurred" + ex.Message);
+            }
+        }
+
+        [HttpPost("deshabilitar/{email}/{idCabaña}")]
+        public IActionResult DeshabilitarCabaña(string email, int idCabaña)
+        {
+            try
+            {
+                if (email == null || idCabaña < 0) return BadRequest("A valid email and cabin must be provided");
+                CU_DeshabilitarCabaña.DeshabilitarCabaña(email, idCabaña);
+                return Ok();
+            }
+            catch (ExcepcionesCabaña ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (ExcepcionesBaseDeDatos ex)
+            {
+                return StatusCode(500, "Error connecting to database");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An unexpected error occurred" + ex.Message);
+            }
+        }
+
+
 
 
     }

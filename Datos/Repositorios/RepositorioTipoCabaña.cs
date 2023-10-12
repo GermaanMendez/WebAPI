@@ -31,12 +31,12 @@ namespace Datos.Repositorios
                 }
                 else
                 {
-                    throw new ExcepcionesTipoCabaña("Ya existe un tipo de cabaña con ese nombre en el sistema");
+                    throw new ExcepcionesTipoCabaña("There is already a type of cabin with that name in the system");
                 }
             }
             catch (ExcepcionesBaseDeDatos ex)
             {
-                throw new ExcepcionesBaseDeDatos("Error al acceder a la base de datos" + ex.Message);
+                throw new ExcepcionesBaseDeDatos("Error connecting to database" + ex.Message);
             }
         }
 
@@ -51,7 +51,7 @@ namespace Datos.Repositorios
             }
             catch (ExcepcionesBaseDeDatos ex )
             {
-                throw new ExcepcionesBaseDeDatos("Error al acceder a la base de datos" + ex.Message);
+                throw new ExcepcionesBaseDeDatos("Error connecting to database" + ex.Message);
             }
         }
         public TipoCabaña FindById(int id)
@@ -64,7 +64,7 @@ namespace Datos.Repositorios
             }
             catch (ExcepcionesBaseDeDatos ex)
             {
-                throw new ExcepcionesBaseDeDatos("Error al conectarse con la base de datos" + ex.Message);
+                throw new ExcepcionesBaseDeDatos("Error connecting to database" + ex.Message);
             }
         }
 
@@ -77,7 +77,7 @@ namespace Datos.Repositorios
             }
             catch (ExcepcionesBaseDeDatos ex)
             {
-                throw new ExcepcionesBaseDeDatos("Error al conectarse con la base de datos" + ex.Message);
+                throw new ExcepcionesBaseDeDatos("Error connecting to database" + ex.Message);
             }
         }
         public List<TipoCabaña> GetAllLista()
@@ -89,7 +89,7 @@ namespace Datos.Repositorios
             }
             catch (ExcepcionesBaseDeDatos ex)
             {
-                throw new ExcepcionesBaseDeDatos("Error al conectarse con la base de datos" + ex.Message);
+                throw new ExcepcionesBaseDeDatos("Error connecting to database" + ex.Message);
             }
         }
 
@@ -100,12 +100,12 @@ namespace Datos.Repositorios
                 TipoCabaña aBorrar = FindById(id);
                 if (aBorrar == null)
                 {
-                    throw new ExcepcionesTipoCabaña("El tipo de cabaña que se quiere borrar no existe en el sistema");
+                    throw new ExcepcionesTipoCabaña("The type of cabin you want to delete does not exist in the system");
                 }
                 var HayAlMenosUnaCabañaDelTipo = Contexto.Cabañas.Where(cab => cab.IdTipoCabaña == id).FirstOrDefault();
                 if (HayAlMenosUnaCabañaDelTipo != null)
                 {
-                    throw new ExcepcionesTipoCabaña("El tipo de cabaña que se quiere borrar es usado por una o mas cabañas. Por favor primero borre las cabañas correspondientes y vuelva a intentarlo.");
+                    throw new ExcepcionesTipoCabaña("The type of cabin you want to delete is used by one or more cabins. Please delete the corresponding cabins first and try again");
                 }
                 else
                 {
@@ -116,7 +116,7 @@ namespace Datos.Repositorios
             }
             catch (ExcepcionesBaseDeDatos ex)
             {
-                throw new ExcepcionesBaseDeDatos("Error al conectarse con la base de datos" + ex.Message);
+                throw new ExcepcionesBaseDeDatos("Error connecting to database" + ex.Message);
             }
         }
 
@@ -130,7 +130,7 @@ namespace Datos.Repositorios
             }
             catch (ExcepcionesBaseDeDatos ex)
             {
-                throw new ExcepcionesBaseDeDatos("Error al conectarse con la base de datos" + ex.Message);
+                throw new ExcepcionesBaseDeDatos("Error connecting to database" + ex.Message);
             }
         }
 

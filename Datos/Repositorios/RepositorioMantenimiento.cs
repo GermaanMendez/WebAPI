@@ -22,28 +22,7 @@ namespace Datos.Repositorios
         }
         public void Add(Mantenimiento obj)
         {
-            try
-            {
-                obj.Validar();
-                var FechaaAgregar = obj.FechaMantenimiento;
-                var cuantosMantenimientosDiariosTiene = Contexto.Mantenimientos.Where(mant =>mant.IdCabaña==obj.IdCabaña&& mant.FechaMantenimiento.Year == FechaaAgregar.Year &&
-                                                        mant.FechaMantenimiento.Month == FechaaAgregar.Month && mant.FechaMantenimiento.Day == FechaaAgregar.Day)
-                                                        .Count();
-                if (cuantosMantenimientosDiariosTiene <= 2)
-                {
-                    Contexto.Mantenimientos.Add(obj);
-                    Contexto.SaveChanges();
-                }
-                else
-                {
-                    throw new ExcepcionesMantenimiento("No se puede agregar mas de 3 mantenimientos diarios a una misma cabaña");
-                }
-
-            }
-            catch (ExcepcionesBaseDeDatos ex)
-            {
-                throw new ExcepcionesBaseDeDatos("Error al acceder a la base de datos" + ex.Message);
-            }
+            
         }
 
         public Mantenimiento FindById(int id)
@@ -55,7 +34,7 @@ namespace Datos.Repositorios
             }
             catch (ExcepcionesBaseDeDatos ex)
             {
-                throw new ExcepcionesBaseDeDatos("Error al conectarse con la base de datos" + ex.Message);
+                throw new ExcepcionesBaseDeDatos("Error connecting to database" + ex.Message);
             }
         }
 
@@ -68,7 +47,7 @@ namespace Datos.Repositorios
             }
             catch (ExcepcionesBaseDeDatos ex)
             {
-                throw new ExcepcionesBaseDeDatos("Error al conectarse con la base de datos" + ex.Message);
+                throw new ExcepcionesBaseDeDatos("Error connecting to database" + ex.Message);
             }
         }
 
@@ -82,7 +61,7 @@ namespace Datos.Repositorios
             }
             catch (ExcepcionesBaseDeDatos ex)
             {
-                throw new ExcepcionesBaseDeDatos("Error al conectarse con la base de datos" + ex.Message);
+                throw new ExcepcionesBaseDeDatos("Error connecting to database" + ex.Message);
             }
         }
 
@@ -96,7 +75,7 @@ namespace Datos.Repositorios
             }
             catch (ExcepcionesBaseDeDatos ex)
             {
-                throw new ExcepcionesBaseDeDatos("Error al conectarse con la base de datos" + ex.Message);
+                throw new ExcepcionesBaseDeDatos("Error connecting to database" + ex.Message);
             }
         }
 
@@ -107,7 +86,7 @@ namespace Datos.Repositorios
                 Mantenimiento aBorrar = FindById(id);
                 if (aBorrar == null)
                 {
-                    throw new ExcepcionesMantenimiento("El mantenimiento que se quiere borrar no existe en el sistema");
+                    throw new ExcepcionesMantenimiento("The maintenance you want to delete does not exist in the system");
                 }
                 Contexto.Mantenimientos.Remove(aBorrar);
                 Contexto.SaveChanges(); 
@@ -115,7 +94,7 @@ namespace Datos.Repositorios
             }
             catch (ExcepcionesBaseDeDatos ex)
             {
-                throw new ExcepcionesBaseDeDatos("Error al conectarse con la base de datos" + ex.Message);
+                throw new ExcepcionesBaseDeDatos("Error connecting to database" + ex.Message);
             }
         }
 
@@ -131,21 +110,15 @@ namespace Datos.Repositorios
                 }
                 else
                 {
-                    throw new ExcepcionesMantenimiento("El mantenimiento que se quiere actualizar no existe en el sistema");
+                    throw new ExcepcionesMantenimiento("The maintenance you want to update does not exist in the system");
                 }
             }
             catch (ExcepcionesBaseDeDatos ex)
             {
-                throw new ExcepcionesBaseDeDatos("Error al conectarse con la base de datos" + ex.Message);
+                throw new ExcepcionesBaseDeDatos("Error connecting to database" + ex.Message);
             }
         }
 
-
-        //SELECT PARA OBLIGATORIOR 2 
-        //b.Dados dos valores, obtener los mantenimientos realizados a las cabañas con una capacidad que
-        //esté comprendida(topes inclusive) entre ambos valores.El resultado se agrupará por nombre de
-        //la persona que realizó el mantenimiento, e incluirá el nombre de la persona y el monto total de
-        //los mantenimientos que realizó.
         public IEnumerable<Mantenimiento> ObtenerMantenimientosPorValores(double valor1, double valor2)
         {
             try
@@ -155,7 +128,7 @@ namespace Datos.Repositorios
             }
             catch (ExcepcionesBaseDeDatos ex)
             {
-                throw new ExcepcionesBaseDeDatos("Error al conectarse con la base de datos" + ex.Message);
+                throw new ExcepcionesBaseDeDatos("Error connecting to database" + ex.Message);
             }
         }
 
@@ -171,7 +144,7 @@ namespace Datos.Repositorios
                 else
                 {
                     var cabinToAddMaintenance = Contexto.Cabañas.Include(cab=>cab.Usuario).Where(cab => cab.NumeroHabitacion == obj.IdCabaña).FirstOrDefault();
-                    if (cabinToAddMaintenance == null) { throw new ExcepcionesMantenimiento("La cabania no existeee"); }
+                    if (cabinToAddMaintenance == null) { throw new ExcepcionesMantenimiento("The cabin doesn't exists"); }
                     if (cabinToAddMaintenance.Usuario.Id==owner.Id)
                     {
                         obj.Validar();
@@ -186,19 +159,19 @@ namespace Datos.Repositorios
                         }
                         else
                         {
-                            throw new ExcepcionesMantenimiento("No se puede agregar mas de 3 mantenimientos diarios a una misma cabaña");
+                            throw new ExcepcionesMantenimiento("No more than 3 maintenances can be added on the same date.");
                         }
                     }
                     else
                     {
-                        throw new ExcepcionesMantenimiento("El usuario que está intentando agregar un nuevo mantenimiento a la cabaña no es el dueño de la cabaña");
+                        throw new ExcepcionesMantenimiento("The user who is trying to add a new maintenance to the cabin is not the owner of the cabin");
                     }
                    
                 }
             }
             catch (ExcepcionesBaseDeDatos ex)
             {
-                throw new ExcepcionesBaseDeDatos("Error al acceder a la base de datos" + ex.Message);
+                throw new ExcepcionesBaseDeDatos("Error connecting to database" + ex.Message);
             }
         }
     }

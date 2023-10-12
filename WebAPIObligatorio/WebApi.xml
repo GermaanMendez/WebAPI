@@ -22,7 +22,7 @@
             500 ante errores de servidor o base de datos</returns>
             200 OK si todo sale bien
         </member>
-        <member name="M:WebAPIObligatorio.Controllers.CabañaController.Post(DTOS.CabañaNuevaDTO)">
+        <member name="M:WebAPIObligatorio.Controllers.CabañaController.Post(DTOS.CabañaDTO)">
             <summary>
             Crea una cabaña
             </summary>
@@ -61,7 +61,7 @@
             500 ante errores de servidor o base de datos</returns>
             200 OK si todo sale bien
         </member>
-        <member name="M:WebAPIObligatorio.Controllers.CabañaController.GETListarSoloHabilitadas">
+        <member name="M:WebAPIObligatorio.Controllers.CabañaController.GETListarNOHabilitadas">
             <summary>
             Retorna las cabañas que esten habilitadas
             </summary>

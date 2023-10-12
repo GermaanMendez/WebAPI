@@ -1,5 +1,4 @@
-﻿using Dominio_Interfaces.EnitdadesNegocio;
-using DTOS;
+﻿using DTOS;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace CasosUso.CU_Cabaña.InterfacesCU
 {
-    public interface IAltaCabaña
+    public interface IEditarCabaña
     {
-        void AltaCabaña(CabañaDTO nuevo);
+        void edit(CabañaDTO aEditar);
     }
 }

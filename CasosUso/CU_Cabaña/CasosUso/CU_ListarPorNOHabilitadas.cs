@@ -10,16 +10,16 @@ using System.Threading.Tasks;
 
 namespace CasosUso.CU_Cabaña.CasosUso
 {
-    public class CU_ListarPorHabilitadas : IListarPorHabilitadas
+    public class CU_ListarPorNOHabilitadas : IListarPorNOHabilitadas
     {
         IRepositorioCabaña RepoCabaña { get; set; }
-        public CU_ListarPorHabilitadas(IRepositorioCabaña  repo)
+        public CU_ListarPorNOHabilitadas(IRepositorioCabaña  repo)
         {
             RepoCabaña = repo;  
         }
         public IEnumerable<CabañaDTO> ListarCabañasHabilitadas()
         {
-            return RepoCabaña.ObtenerCabañasHabilitadas().Select(cab => new CabañaDTO()
+            return RepoCabaña.ObtenerCabañasNOHabilitadas().Select(cab => new CabañaDTO()
             {
                 NumeroHabitacion = cab.NumeroHabitacion,
                 Nombre = cab.Nombre.valor,
@@ -29,11 +29,25 @@ namespace CasosUso.CU_Cabaña.CasosUso
                 EstaHabilitada = cab.EstaHabilitada,
                 CantidadPersonasMax = cab.CantidadPersonasMax,
                 IdTipoCabaña = cab.IdTipoCabaña,
-                Usuario = cab.Usuario,
+                Usuario = ToUsuarioDTO(cab.Usuario),
                 //IdUsuario = cab.IdUsuario,
                 PrecioDiario = cab.PrecioPorDia
 
-            }); ; ;
+            }); 
+        }
+
+        public UsuarioDTO ToUsuarioDTO(Usuario usuario)
+        {
+            return new UsuarioDTO()
+            {
+                Id = usuario.Id,
+                Nombre = usuario.Nombre.Valor,
+                Apellido = usuario.Apellido.Valor,
+                Email = usuario.Email.Valor,
+                Contraseña = usuario.Contraseña.Valor,
+                Rol = usuario.Rol.Valor,
+
+            };
         }
     }
 }

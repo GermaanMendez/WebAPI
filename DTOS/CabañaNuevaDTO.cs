@@ -19,7 +19,7 @@ namespace DTOS
         public int CantidadPersonasMax { get; set; }
         public int PrecioDiario { get; set; }
         public int IdTipoCabaña { get; set; }
-        public int IdUsuario { get; set; }
+        public string emailUsuario { get; set; }
 
 
 

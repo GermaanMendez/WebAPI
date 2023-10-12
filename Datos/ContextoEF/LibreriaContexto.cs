@@ -36,30 +36,6 @@ namespace Datos.ContextoEF
             modelBuilder.Entity<Usuario>().OwnsOne(usu => usu.Apellido);
             modelBuilder.Entity<Usuario>().OwnsOne(usu => usu.Rol);
 
-            //esto si estaba
-            //modelBuilder.Entity<Cabaña>()
-            //    .HasOne(c => c.Usuario)
-            //    .WithMany(u => u.CabañasPropias)
-            //    .HasForeignKey(c => c.IdUsuario)
-            //    .OnDelete(DeleteBehavior.Cascade);  // Acción en cascada en la relación con Cabaña
-
-            //modelBuilder.Entity<AlquilerCabaña>()
-            //    .HasOne(ac => ac.Usuario)
-            //    .WithMany()  // No se establece relación inversa en AlquilerCabaña
-            //    .HasForeignKey(ac => ac.UsuarioId)
-            //    .OnDelete(DeleteBehavior.Restrict);
-
-
-            //esto no estaba
-
-
-
-
-            //modelBuilder.Entity<AlquilerCabaña>()
-            //    .HasOne(ac => ac.Cabaña)  // AlquilerCabaña tiene una relación con Cabaña
-            //    .WithMany()  // No se establece relación inversa en AlquilerCabaña
-            //    .HasForeignKey(ac => ac.CabañaId)
-            //    .OnDelete(DeleteBehavior.Restrict);  // Acción de restricción en caso de eliminación
 
 
             base.OnModelCreating(modelBuilder);

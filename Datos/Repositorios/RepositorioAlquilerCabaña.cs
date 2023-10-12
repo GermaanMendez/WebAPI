@@ -42,17 +42,17 @@ namespace Datos.Repositorios
                     }
                     else
                     {
-                        throw new ExepcionesAlquileresCabaña("La cabaña no esta disponible para ser alquilada en ese rango de fechas");
+                        throw new ExepcionesAlquileresCabaña("The cabin is not available to rent in that date range");
                     }
                 }
                 else
                 {
-                    throw new ExepcionesAlquileresCabaña("Se debe ingresar un Alquiler no nulo");
+                    throw new ExepcionesAlquileresCabaña("The Rent to create cannot be null");
                 }
             }
             catch (ExcepcionesBaseDeDatos ex)
             {
-                throw new ExcepcionesBaseDeDatos("Error al conectarse a la base de datos " + ex.Message);
+                throw new ExcepcionesBaseDeDatos("Error connecting to database " + ex.Message);
             }
         }
 
@@ -60,11 +60,11 @@ namespace Datos.Repositorios
         {
             try
             {
-                if (idAlquiler == null || idAlquiler < 1 || emailUsuario==null || emailUsuario.Length<1) throw new ExepcionesAlquileresCabaña("Credenciales para eliminar no validas");
+                if (idAlquiler < 1 || emailUsuario==null || emailUsuario.Length<1) throw new ExepcionesAlquileresCabaña("Invalid credentials to delete");
                 var usuario = ObtenerUsuarioPorEmail(emailUsuario);
-                if (usuario == null) throw new ExepcionesAlquileresCabaña("No existe un usuario con las credenciales ingresadas");
+                if (usuario == null) throw new ExepcionesAlquileresCabaña("The user you are trying to delete does not exist on the system");
                 var alquilerEliminar = Contexto.AlquileresCabañas.Where(alq => alq.IdAlquiler == idAlquiler).FirstOrDefault();
-                if (alquilerEliminar == null) throw new ExepcionesAlquileresCabaña("No un alquiler con las credenciales ingresadas");
+                if (alquilerEliminar == null) throw new ExepcionesAlquileresCabaña("The rental you are trying to delete does not exist in the system");
                 if (alquilerEliminar.Usuario == usuario)
                 {
                     Contexto.AlquileresCabañas.Remove(alquilerEliminar);
@@ -73,12 +73,12 @@ namespace Datos.Repositorios
                 }
                 else
                 {
-                    throw new ExepcionesAlquileresCabaña("El usuario no tiene los permisos necesarios para eliminar el alquiler");
+                    throw new ExepcionesAlquileresCabaña("The user does not have the necessary permissions to delete the rental");
                 }
             }
             catch (ExcepcionesBaseDeDatos ex)
             {
-                throw new ExcepcionesBaseDeDatos("Error al conectarse a la base de datos " + ex.Message);
+                throw new ExcepcionesBaseDeDatos("Error connecting to database " + ex.Message);
             }
         }
 
@@ -86,9 +86,9 @@ namespace Datos.Repositorios
         {
             try
             {
-                if (obj == null || emailUsuario == null || emailUsuario.Length < 1) throw new ExepcionesAlquileresCabaña("Credenciales para editar no validas");
+                if (obj == null || emailUsuario == null) throw new ExepcionesAlquileresCabaña("The rental to be edited cannot be null");
                 var usuario = ObtenerUsuarioPorEmail(emailUsuario);
-                if (usuario == null) throw new ExepcionesAlquileresCabaña("No existe un usuario con las credenciales ingresadas");
+                if (usuario == null) throw new ExepcionesAlquileresCabaña("The user trying to edit the rental does not exist in the system");
                 if (obj.Usuario == usuario)
                 {
                     obj.Validar();
@@ -97,12 +97,12 @@ namespace Datos.Repositorios
                 }
                 else
                 {
-                    throw new ExepcionesAlquileresCabaña("El usuario no tiene los permisos necesarios para editar el alquiler");
+                    throw new ExepcionesAlquileresCabaña("The user trying to edit the rental does not have the necessary permissions");
                 }
             }
             catch (ExcepcionesBaseDeDatos ex)
             {
-                throw new ExcepcionesBaseDeDatos("Error al conectarse a la base de datos " + ex.Message);
+                throw new ExcepcionesBaseDeDatos("Error connecting to database " + ex.Message);
             }
         }
         public bool Remove(int id)
@@ -121,7 +121,7 @@ namespace Datos.Repositorios
         }
         public AlquilerCabaña FindById(int id)
         {
-            if(id==null || id<1) throw new ExepcionesAlquileresCabaña("Credenciales de busqueda no validas");
+            if(id<1) throw new ExepcionesAlquileresCabaña("The rental id to search must be a number greater than 0");
             var resultado = Contexto.AlquileresCabañas.Include(alq=>alq.Usuario).Include(alq=>alq.Cabaña).Where(alq=>alq.IdAlquiler==id).FirstOrDefault();
             return resultado;
         }
@@ -129,33 +129,19 @@ namespace Datos.Repositorios
         {
             try
             {
-                if(string.IsNullOrEmpty(emailUsuario) ||idCabaña<1) throw new ExepcionesAlquileresCabaña("Credenciales no validas");
+                if(string.IsNullOrEmpty(emailUsuario) ||idCabaña<1) throw new ExepcionesAlquileresCabaña("A valid email and cabin ID must be provided");
                 var cabañaBuscada = Contexto.Cabañas.Include(cab=>cab.Usuario).Where(cab => cab.NumeroHabitacion == idCabaña).FirstOrDefault();
-                if (cabañaBuscada.Usuario.Email.Valor.ToLower()!=emailUsuario.ToLower()) throw new ExepcionesAlquileresCabaña("El usuario no es dueño de la cabaña seleccionada");
+                if (cabañaBuscada.Usuario.Email.Valor.ToLower()!=emailUsuario.ToLower()) throw new ExepcionesAlquileresCabaña("The user is not the owner of the cabin");
                 var resultado = Contexto.AlquileresCabañas.Include(alq=>alq.Usuario).Where(alq => alq.Cabaña.NumeroHabitacion == idCabaña && alq.Cabaña.Usuario.Email.Valor.ToLower() == emailUsuario.ToLower()).ToList();
                 return resultado;
             }
             catch (ExcepcionesBaseDeDatos ex)
             {
-                throw new ExcepcionesBaseDeDatos("Error al conectarse a la base de datos " + ex.Message);
+                throw new ExcepcionesBaseDeDatos("Error connecting to database " + ex.Message);
             }
         }
         //Obtener alquileres que yo usuario he realizado
-        public IEnumerable<AlquilerCabaña> ObtenerAlquileresRealizadosPorUsuario(string emailUsuario)
-        {
-            try
-            {
-                if (emailUsuario == null || emailUsuario.Length < 1) throw new ExepcionesAlquileresCabaña("Credenciales no validas");
-                var user= ObtenerUsuarioPorEmail(emailUsuario);
-                if(user == null) throw new ExepcionesAlquileresCabaña("El usuario no existe");
-                var resultado = Contexto.AlquileresCabañas.Include(alq => alq.Cabaña).Where(alq => alq.Usuario == user).ToList();
-                return resultado;
-            }
-            catch (ExcepcionesBaseDeDatos ex)
-            {
-                throw new ExcepcionesBaseDeDatos("Error al conectarse a la base de datos " + ex.Message);
-            }
-        }
+        
 
         private Usuario ObtenerUsuarioPorEmail(string email)
         {

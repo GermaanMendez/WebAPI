@@ -38,16 +38,16 @@ namespace Datos.Repositorios
                 }
                 else if(existeYa != null && existeDueño == null)
                 {
-                    throw new ExcepcionesCabaña("Ya existe una cabaña con ese nombre en el sistema");
+                    throw new ExcepcionesCabaña("There is already a cabin with that name in the system");
                 }
                 else
                 {
-                    throw new ExcepcionesCabaña("El usuario que intenta agregar la cabaña no existe en el sistema");
+                    throw new ExcepcionesCabaña("The user trying to create the cabin does not exist in the system");
                 }
             }
             catch (ExcepcionesBaseDeDatos ex)
             {
-                throw new ExcepcionesBaseDeDatos("Error al acceder a la base de datos" + ex.Message);
+                throw new ExcepcionesBaseDeDatos("Error connecting to database" + ex.Message);
             }
         }
 
@@ -55,12 +55,12 @@ namespace Datos.Repositorios
         {
             try
             {
-                var ListaCabañas = Contexto.Cabañas.Where(cab => cab.CantidadPersonasMax >= cantPersonas).Include(cab => cab.Usuario).ToList();
+                var ListaCabañas = Contexto.Cabañas.Where(cab => cab.CantidadPersonasMax >= cantPersonas && cab.EstaHabilitada).Include(cab => cab.Usuario).ToList();
                 return ListaCabañas;
             }
             catch (ExcepcionesBaseDeDatos ex)
             {
-                throw new ExcepcionesBaseDeDatos("Error al conectarse con la base de datos" + ex.Message);
+                throw new ExcepcionesBaseDeDatos("Error connecting to database" + ex.Message);
             }
         }
         public IEnumerable<Cabaña> BuscarCabañaPorTexto(string texto)
@@ -68,12 +68,12 @@ namespace Datos.Repositorios
             try
             {
                 texto.ToLower();
-                var ListaCabañas = Contexto.Cabañas.Where(cab => cab.Nombre.valor.ToLower() == texto || cab.Nombre.valor.ToLower().Contains(texto)).Include(cab => cab.Usuario).ToList();
+                var ListaCabañas = Contexto.Cabañas.Where(cab => cab.Nombre.valor.ToLower() == texto || cab.Nombre.valor.ToLower().Contains(texto) && cab.EstaHabilitada).Include(cab => cab.Usuario).ToList();
                 return ListaCabañas;
             }
             catch (ExcepcionesBaseDeDatos ex)
             {
-                throw new ExcepcionesBaseDeDatos("Error al conectarse con la base de datos" + ex.Message);
+                throw new ExcepcionesBaseDeDatos("Error connecting to database" + ex.Message);
             }
         }
 
@@ -81,12 +81,12 @@ namespace Datos.Repositorios
         {
             try
             {
-                var ListaCabañas = Contexto.Cabañas.Where(cab => cab.IdTipoCabaña == idTipoCabaña).Include(cab => cab.Usuario).ToList();
+                var ListaCabañas = Contexto.Cabañas.Where(cab => cab.IdTipoCabaña == idTipoCabaña && cab.EstaHabilitada).Include(cab => cab.Usuario).ToList();
                 return ListaCabañas;
             }
             catch (ExcepcionesBaseDeDatos ex)
             {
-                throw new ExcepcionesBaseDeDatos("Error al conectarse con la base de datos" + ex.Message);
+                throw new ExcepcionesBaseDeDatos("Error connecting to database" + ex.Message);
             }
         }
 
@@ -94,12 +94,12 @@ namespace Datos.Repositorios
         {
             try
             {
-                Cabaña aBuscar = Contexto.Cabañas.Include(cab => cab.Usuario).FirstOrDefault(cab=>cab.NumeroHabitacion==id);
+                Cabaña aBuscar = Contexto.Cabañas.Include(cab => cab.Usuario).Include(cab=>cab.TipoCabaña).FirstOrDefault(cab=>cab.NumeroHabitacion==id);
                 return aBuscar;
             }
             catch (ExcepcionesBaseDeDatos ex)
             {
-                throw new ExcepcionesBaseDeDatos("Error al conectarse con la base de datos" + ex.Message);
+                throw new ExcepcionesBaseDeDatos("Error connecting to database" + ex.Message);
             }
         }
 
@@ -107,27 +107,27 @@ namespace Datos.Repositorios
         {
             try
             {
-                var listaCabañas = Contexto.Cabañas.Include(cab=>cab.TipoCabaña).Include(cab => cab.Usuario).ToList();
+                var listaCabañas = Contexto.Cabañas.Include(cab=>cab.TipoCabaña).Where(cab=>cab.EstaHabilitada).Include(cab => cab.Usuario).ToList();
 
                 return listaCabañas;
             }
             catch (ExcepcionesBaseDeDatos ex)
             {
-                throw new ExcepcionesBaseDeDatos("Error al conectarse con la base de datos" + ex.Message);
+                throw new ExcepcionesBaseDeDatos("Error connecting to database" + ex.Message);
             }
         }
 
-        public IEnumerable<Cabaña> ObtenerCabañasHabilitadas()
+        public IEnumerable<Cabaña> ObtenerCabañasNOHabilitadas()
         {
             try
             {
-                var ListaCabañas = Contexto.Cabañas.Where(cab => cab.EstaHabilitada == true).Include(cab=>cab.Usuario).ToList();
+                var ListaCabañas = Contexto.Cabañas.Where(cab => cab.EstaHabilitada == false).Include(cab=>cab.Usuario).ToList();
                 return ListaCabañas;
 
             }
             catch (ExcepcionesBaseDeDatos ex)
             {
-                 throw new ExcepcionesBaseDeDatos("Error al conectarse con la base de datos" + ex.Message);
+                 throw new ExcepcionesBaseDeDatos("Error connecting to database" + ex.Message);
             }
         }
 
@@ -138,12 +138,12 @@ namespace Datos.Repositorios
                 Cabaña aBorrar = FindById(id);
                 if (aBorrar == null)
                 {
-                    throw new ExcepcionesCabaña("La cabaña que se quiere borrar no existe en el sistema");
+                    throw new ExcepcionesCabaña("The cabin you want to delete does not exist in the system");
                 }
                 var TieneAlMenosUnMantenimiento = Contexto.Mantenimientos.Include(mant => mant.Cabaña).Where(mant=> mant.Cabaña.NumeroHabitacion==id).FirstOrDefault();
                 if (TieneAlMenosUnMantenimiento != null)
                 {
-                    throw new ExcepcionesCabaña("La cabaña que se quiere borrar tiene uno o mas mantenimientos asignados. Por favor primero borre los mantenimientos correspondientes y vuelva a intentarlo.");
+                    throw new ExcepcionesCabaña("The cabin you want to delete has one or more maintenance assigned to it. Please first delete the corresponding maintenance and try again");
                 }
                 else
                 {
@@ -154,7 +154,7 @@ namespace Datos.Repositorios
             }
             catch (ExcepcionesBaseDeDatos ex)
             {
-                throw new ExcepcionesBaseDeDatos("Error al conectarse con la base de datos" + ex.Message);
+                throw new ExcepcionesBaseDeDatos("Error connecting to database" + ex.Message);
             }
         }
 
@@ -163,39 +163,29 @@ namespace Datos.Repositorios
             try
             {
                 obj.Validar();
-                if (Contexto.Cabañas.Find(obj.NumeroHabitacion) != null)
-                {
-                    Contexto.Cabañas.Update(obj);
-                    Contexto.SaveChanges();
-                }
-                else
-                {
-                    throw new ExcepcionesCabaña("La cabaña que se quiere actualizar no existe en el sistema");
-                }
+                Contexto.Cabañas.Update(obj);
+                Contexto.SaveChanges();
             }
             catch (ExcepcionesBaseDeDatos ex)
             {
-                throw new ExcepcionesBaseDeDatos("Error al conectarse con la base de datos" + ex.Message);
+                throw new ExcepcionesBaseDeDatos("Error connecting to database" + ex.Message);
             }
         }
 
 
-        //SELECT OBLIGATORIOR 2
-        //Dado un monto, obtener el nombre y capacidad(cantidad de huéspedes que puede alojar) de las cabañas que tengan un 
-        // costo diario menor a ese monto, que tengan jacuzzi y estén habilitadas para reserva.
         public IEnumerable<Cabaña> ObtenerCabañasMonto(int monto)
         {
             try
             {
                     var resultado = Contexto.Cabañas.Include(cab => cab.TipoCabaña)
                                     .Include(cab=>cab.Usuario)
-                                    .Where(cab=>cab.PrecioPorDia <= monto)
+                                    .Where(cab=>cab.PrecioPorDia <= monto && cab.EstaHabilitada)
                                     .ToList();
                     return resultado;
             }
             catch (ExcepcionesBaseDeDatos ex)
             {
-                throw new ExcepcionesBaseDeDatos("Error al conectarse con la base de datos" + ex.Message);
+                throw new ExcepcionesBaseDeDatos("Error connecting to database" + ex.Message);
             }
         }
 
@@ -222,22 +212,22 @@ namespace Datos.Repositorios
                         }
                         else
                         {
-                            throw new ExcepcionesCabaña("El usuario no tiene los permisos necesarios para eliminar la cabaña");
+                            throw new ExcepcionesCabaña("The user does not have the necessary permissions to delete the cabin");
                         }
                     }
                     else
                     {
-                        throw new ExcepcionesCabaña("La cabaña que se intenta eliminar no existe en el sistema");
+                        throw new ExcepcionesCabaña("The cabin you want to delete does not exist in the system");
                     }
                 }
                 else
                 {
-                    throw new ExcepcionesCabaña("El usuario con la id " + emailDueño + " no existe.");
+                    throw new ExcepcionesCabaña("The user with Email: " + emailDueño + " doesn't exists.");
                 }
             }
             catch (ExcepcionesBaseDeDatos ex)
             {
-                throw new ExcepcionesBaseDeDatos("Error al conectarse con la base de datos" + ex.Message);
+                throw new ExcepcionesBaseDeDatos("Error connecting to database" + ex.Message);
             }
         }
 
@@ -245,9 +235,9 @@ namespace Datos.Repositorios
         {
             try
             {
-                if(desde!=null && hasta!=null && desde < hasta)
+                if(desde < hasta)
                 {
-                    var cabañasConAlquileresEnRango = Contexto.AlquileresCabañas.Where(alquiler =>(alquiler.FechaAlquilerDesde >= desde && alquiler.FechaAlquilerDesde <= hasta) ||(alquiler.FechaAlquilerHasta >= desde && alquiler.FechaAlquilerHasta <= hasta))
+                    var cabañasConAlquileresEnRango = Contexto.AlquileresCabañas.Where(alquiler =>(alquiler.FechaAlquilerDesde >= desde && alquiler.FechaAlquilerDesde <= hasta) ||(alquiler.FechaAlquilerHasta >= desde && alquiler.FechaAlquilerHasta <= hasta)&& alquiler.Cabaña.EstaHabilitada)
                                                                                 .Select(alquiler => alquiler.Cabaña.NumeroHabitacion)
                                                                                 .ToList();
 
@@ -258,22 +248,66 @@ namespace Datos.Repositorios
                                               .ToList(); // Excluir cabañas con alquileres en el rango
                     return cabañasDisponibles;
                 }
-                else if(desde==null || hasta==null)
-                {
-                    throw new ExcepcionesCabaña("Se debe ingresar un rango de fechas valido NULL");
-                }
-                else if (desde>=hasta)
-                {
-                    throw new ExcepcionesCabaña("Desde >= hasta");
-                }
                 else
                 {
-                    throw new ExcepcionesCabaña("Ninguna ");
+                    throw new ExcepcionesCabaña("The start date cannot be greater than the end date");
                 }
             }
             catch (ExcepcionesBaseDeDatos ex)
             {
-                throw new ExcepcionesBaseDeDatos("Error al conectarse con la base de datos" + ex.Message);
+                throw new ExcepcionesBaseDeDatos("Error connecting to database" + ex.Message);
+            }
+        }
+
+        public bool DeshabilitarCabaña(string emailDueño, int idCabaña)
+        {
+            try
+            {
+                if(emailDueño!=null && idCabaña >= 0)
+                {
+                    var usuario = Contexto.Usuarios.Where(usu => usu.Email.Valor.ToLower() == emailDueño.ToLower()).FirstOrDefault();
+                    if(usuario==null) throw new ExcepcionesCabaña("The user doesn't exist in the system. ");
+                    if (usuario.Rol.Valor.ToLower() != "administrador") throw new ExcepcionesCabaña("The user does not have the necessary permissions ");
+                    var cabaña = Contexto.Cabañas.Where(cab => cab.NumeroHabitacion == idCabaña).FirstOrDefault();
+                    if(cabaña==null) throw new ExcepcionesCabaña("The cabin doesn't exist in the system. ");
+                    cabaña.EstaHabilitada = false;
+                    Contexto.SaveChanges();
+                    return true;
+                }
+                else
+                {
+                    throw new ExcepcionesCabaña("A valid email and cabin must be provided ");
+                }
+            }
+            catch (ExcepcionesBaseDeDatos ex)
+            {
+                throw new ExcepcionesBaseDeDatos("error connecting to database" + ex.Message);
+            }
+        }
+
+        public bool HabilitarCabaña(string emailDueño, int idCabaña)
+        {
+            try
+            {
+                if (emailDueño != null && idCabaña >= 0)
+                {
+                    var usuario = Contexto.Usuarios.Where(usu => usu.Email.Valor.ToLower() == emailDueño.ToLower()).FirstOrDefault();
+                    if (usuario == null) throw new ExcepcionesCabaña("The user doesn't exist in the system. ");
+                    if (usuario.Rol.Valor.ToLower() != "administrador") throw new ExcepcionesCabaña("The user does not have the necessary permissions ");
+                    var cabaña = Contexto.Cabañas.Where(cab => cab.NumeroHabitacion == idCabaña).FirstOrDefault();
+                    if (cabaña == null) throw new ExcepcionesCabaña("The cabin doesn't exist in the system. ");
+                    cabaña.EstaHabilitada = true;
+                    Contexto.SaveChanges();
+                    return true;
+                }
+                else
+                {
+                    throw new ExcepcionesCabaña("A valid email and cabin must be provided ");
+                }
+            }
+            catch (ExcepcionesBaseDeDatos ex)
+            {
+                throw new ExcepcionesBaseDeDatos("error connecting to database" + ex.Message);
             }
         }
     }

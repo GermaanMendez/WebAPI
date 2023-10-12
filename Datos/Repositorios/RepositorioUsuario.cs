@@ -2,6 +2,8 @@
 using Dominio_Interfaces.EnitdadesNegocio;
 using Dominio_Interfaces.ExepcionesPropias;
 using Dominio_Interfaces.InterfacesRepositorios;
+using ExcepcionesPropias;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,12 +32,12 @@ namespace Datos.Repositorios
                 }
                 else
                 {
-                    throw new ExcepcionesUsuario("Contraseña incorrecta.");
+                    throw new ExcepcionesUsuario("Incorrect Password.");
                 }
             }
             else
             {
-                throw new ExcepcionesUsuario("No existe un usuario con el Email ingresado, intentelo de nuevo.");
+                throw new ExcepcionesUsuario("There is not any user with that email, try again.");
             }
         }
 
@@ -43,7 +45,7 @@ namespace Datos.Repositorios
         {
             if(nuevoUsuario==null)
             {
-                throw new ExcepcionesUsuario("Los datos para el registro no pueden ser nulos");
+                throw new ExcepcionesUsuario("The user to add cannot be null");
             }
             else
             {
@@ -59,7 +61,7 @@ namespace Datos.Repositorios
                     }
                     else
                     {
-                        throw new ExcepcionesUsuario("Ya existe un usuario con ese email");
+                        throw new ExcepcionesUsuario("A user with that email already exists in the system");
                     }
                 }
                 catch (ExcepcionesBaseDeDatos ex)
@@ -99,5 +101,29 @@ namespace Datos.Repositorios
                     return result;
                 }
             }
+
+
+            public IEnumerable<AlquilerCabaña> ObtenerAlquileresRealizadosPorUsuario(string emailUsuario)
+            {
+                try
+                {
+                    if (emailUsuario == null || emailUsuario.Length < 1) throw new ExepcionesAlquileresCabaña("invalid credentials");
+                    var user = GetUsuarioByEmail(emailUsuario);
+                    if (user == null) throw new ExepcionesAlquileresCabaña("The User does not exist");
+                    var resultado = Contexto.AlquileresCabañas.Include(alq => alq.Cabaña).Include(alq=>alq.Usuario).Where(alq => alq.Usuario == user).ToList();
+                    return resultado;
+                }
+                catch (ExcepcionesBaseDeDatos ex)
+                {
+                    throw new ExcepcionesBaseDeDatos("Error connecting to database " + ex.Message);
+                }
+            }
+
+
+
+
+
+
+
     }
 }

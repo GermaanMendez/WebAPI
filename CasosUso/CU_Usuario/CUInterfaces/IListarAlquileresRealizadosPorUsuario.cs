@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CasosUso.CU_AlquilerCabaña.InterfacesCU
+namespace CasosUso.CU_Usuario.CUInterfaces
 {
     public interface IListarAlquileresRealizadosPorUsuario
     {

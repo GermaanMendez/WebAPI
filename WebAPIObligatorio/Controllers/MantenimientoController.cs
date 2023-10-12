@@ -51,12 +51,12 @@ namespace WebAPIObligatorio.Controllers
             try
             {
                 IEnumerable<MantenimientoDTO> mantenimientosDTO = CU_ObtenerMantenimientos.ListarTodos();
-                if (!mantenimientosDTO.Any()) return NotFound("No hay ningun mantenimiento en el sistema");
+                if (!mantenimientosDTO.Any()) return NotFound("There isn't any maintenance on the system");
                 return Ok(mantenimientosDTO);
             }
             catch
             {
-                return StatusCode(500, "Ocurrio un error inesperado");
+                return StatusCode(500, "An unexpected error occurred");
             }
         }
 
@@ -79,14 +79,14 @@ namespace WebAPIObligatorio.Controllers
         {
             try
             {
-                if (id <= 0) return BadRequest("El id del mantenimiento debe ser un entero positivo");
+                if (id <= 0) return BadRequest("The maintenance id to search for must be a number greater than zero.");
                 MantenimientoDTO mantenimientoDTO= CU_BuscarPorId.BuscarPorId(id);
-                if (mantenimientoDTO == null) return NotFound($"El mantenimiento con el id: {id} no existe en el sistema");
+                if (mantenimientoDTO == null) return NotFound($"The Maintenance with id: {id} does not exists in the System.");
                 return Ok(mantenimientoDTO);
             }
             catch
             {
-                return StatusCode(500, "Ocurrio un error inesperado");
+                return StatusCode(500, "An unexpected error occurred");
             }
 
         }
@@ -110,7 +110,7 @@ namespace WebAPIObligatorio.Controllers
             if (mantenimientodto == null || string.IsNullOrEmpty(email)) return BadRequest("You must provide maintenance to create");
             try
             {
-                Usuario user = CU_GetUserByEmail.GetUsuarioByEmail(email);
+                UsuarioDTO user = CU_GetUserByEmail.GetUsuarioByEmail(email);
                 if (user == null) { return BadRequest("The user with this Email doesn't exists in the system"); }
                 CU_AltaMantenimiento.AltaMantenimiento(mantenimientodto,email);
                 return CreatedAtRoute("RutaMantDetail", new { id = mantenimientodto.Id }, mantenimientodto);
@@ -121,7 +121,7 @@ namespace WebAPIObligatorio.Controllers
             }
             catch
             {
-                return StatusCode(500, "Ocurrio un error inesperado");
+                return StatusCode(500, "An unexpected error occurred");
             }
         }
 
@@ -142,16 +142,16 @@ namespace WebAPIObligatorio.Controllers
         [HttpGet("Cabaña/{NumeroHabitacion}")]
         public IActionResult GETListarPorCabaña(int NumeroHabitacion)
         {
-            if (NumeroHabitacion <= 0) return BadRequest("Se debe ingresar un numero de habitacion valido para agregar el mantenimiento");
+            if (NumeroHabitacion <= 0) return BadRequest("To obtain the list of maintenance of the cabin you must provide the Id of the cabin");
             try
             {
                 IEnumerable<MantenimientoDTO> mantenimientosDtos = CU_ListarPorCabaña.ListarPorCabaña(NumeroHabitacion);
-                if (!mantenimientosDtos.Any()) return NotFound("No hay ningun mantenimiento para esa cabaña");
+                if (!mantenimientosDtos.Any()) return NotFound("There is no maintenance carried out on the selected cabin");
                 return Ok(mantenimientosDtos);
             }
             catch
             {
-                return StatusCode(500, "Ocurrio un error inesperado");
+                return StatusCode(500, "An unexpected error occurred");
             }
         }
         #region DOCUMENTACION API
@@ -174,17 +174,17 @@ namespace WebAPIObligatorio.Controllers
         [HttpGet("{Id}/{fecha1}/{fecha2}")]
         public IActionResult GETListarMantenimientosPorFecha(int Id, DateTime fecha1, DateTime fecha2)
         {
-            if (Id <= 0) return BadRequest("Se debe ingresar un numero de mantenimiento valido para buscar");
-            if (fecha1 > fecha2 || fecha1 == null || fecha2 == null) return BadRequest("Las fechas son obligatorias y fecha 1 debe ser < fecha 2");
+            if (Id <= 0) return BadRequest("To obtain the list of maintenance of the cabin you must provide the Id of the cabin");
+            if (fecha1 > fecha2) return BadRequest("The date from must be less than the until date");
             try
             {
                 IEnumerable<MantenimientoDTO> mantenimientosDtos = CU_ListarPorCabañaYFecha.ListarPorCabañaYFecha(Id,fecha1,fecha2);
-                if (!mantenimientosDtos.Any()) return NotFound("No hay ningun mantenimiento para esa cabaña en ese rango de fechas");
+                if (!mantenimientosDtos.Any()) return NotFound("No maintenance has been performed on the selected cabin in that date range");
                 return Ok(mantenimientosDtos);
             }
             catch
             {
-                return StatusCode(500, "Ocurrio un error inesperado");
+                return StatusCode(500, "An unexpected error occurred");
             }
         }
 
@@ -215,7 +215,7 @@ namespace WebAPIObligatorio.Controllers
             }
             catch
             {
-                return StatusCode(500, "Ocurrio un error inesperado");
+                return StatusCode(500, "An unexpected error occurred");
             }
         }
 

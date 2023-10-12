@@ -49,5 +49,8 @@ namespace Dominio_Interfaces.EnitdadesNegocio
                 throw new ExcepcionesCabaña("La cabaña debe tener una capacidad minima de 1 persona.");
             }
         }
+
+  
+
     }
 }

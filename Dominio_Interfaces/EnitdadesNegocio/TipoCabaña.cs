@@ -22,7 +22,7 @@ namespace Dominio_Interfaces.EnitdadesNegocio
         [Required]
         [RegularExpression(@"^[a-zA-ZñÑ]+([a-zA-ZñÑ ]*[a-zA-ZñÑ])?$", ErrorMessage = "El campo Nombre debe contener solamente caracteres alfabéticos y espacios embebidos, pero no al principio o al final.")]
         [Column(TypeName ="nvarchar(100)")]
-        public string Nombre { get; set; }
+        private string Nombre { get; set; }
         public string Descripcion { get; set; }
 
         public void Validar()
@@ -44,5 +44,15 @@ namespace Dominio_Interfaces.EnitdadesNegocio
                 throw new ExcepcionesTipoCabaña("La descripción debe maximo minimo: " + CantMaxCarDescripcionTipoCabaña + " caracteres.");
             }
         }
+
+        public string GetNombre()
+        {
+            return Nombre;
+        }
+        public void SetNombre(string nuevoNombre)
+        {
+            Nombre=nuevoNombre;
+        }
+
     }
 }

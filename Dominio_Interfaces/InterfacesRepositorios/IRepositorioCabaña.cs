@@ -13,10 +13,13 @@ namespace Dominio_Interfaces.InterfacesRepositorios
         IEnumerable<Cabaña> BuscarCabañaPorTexto(string texto);
         IEnumerable<Cabaña> BuscarCabañaPorTipo(int idTipoCabaña);
         IEnumerable<Cabaña> BuscarCabañaPorCantPersonas(int cantPersonas);
-        IEnumerable<Cabaña> ObtenerCabañasHabilitadas();
+        IEnumerable<Cabaña> ObtenerCabañasNOHabilitadas();
 
         IEnumerable<Cabaña> ObtenerCabañasMonto( int monto);
         IEnumerable<Cabaña> ObtenerCabañasDisponiblesEnRangoFecha(DateTime desde, DateTime hasta);
         bool EliminarCabaña(string emailDueño, int idCabaña);
+        bool DeshabilitarCabaña(string emailDueño, int idCabaña);
+        bool HabilitarCabaña(string emailDueño, int idCabaña);
+
     }
 }

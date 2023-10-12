@@ -55,12 +55,12 @@ namespace WebAPIObligatorio.Controllers
             try
             {
                 IEnumerable<TipoCabañaDTO> tiposDtos = CU_ListarTipos.ListarTodos();
-                if (!tiposDtos.Any()) return NotFound("No hay ningun tipo de cabaña registrado en el sistema");
+                if (!tiposDtos.Any()) return NotFound("There is not any Type Of Cabin in the system");
                 return Ok(tiposDtos);
             }
             catch
             {
-                return StatusCode(500, " Ocurrio un error inesperado");
+                return StatusCode(500, " An unexpected error occurred");
             }
         }
 
@@ -82,16 +82,16 @@ namespace WebAPIObligatorio.Controllers
         [HttpGet("{id}", Name ="RutaDetailTipo")]
         public IActionResult Get(int id) //DETAILS
         {
-            if (id < 0) return BadRequest("El id del tipo a buscar debe ser un numero entero positivo");
+            if (id < 0) return BadRequest("The Id of type to search must be a number bigger than zero");
             try
             {
                 TipoCabañaDTO buscado = CU_BuscarPorId.BuscarPorId(id);
-                if (buscado == null) return NotFound($"El tipo con el id: {id} no existe");
+                if (buscado == null) return NotFound($"There is not any Type Of Cabin with the Id: {id}");
                 return Ok(buscado);
             }
             catch
             {
-                return StatusCode(500, " Ocurrio un error inesperado");
+                return StatusCode(500, " An unexpected error occurred");
             }
         }
 
@@ -111,7 +111,7 @@ namespace WebAPIObligatorio.Controllers
      //   [Authorize]
         public IActionResult Post([FromBody] TipoCabañaDTO? tipoCabañaDto)
         {
-            if (tipoCabañaDto == null) return BadRequest("No se puede crear un tipo de cabaña nulo");
+            if (tipoCabañaDto == null) return BadRequest("The Type Of Cabin to create cannot be null");
             try
             {
                 CU_AltaTipo.AltaTipoCabaña(tipoCabañaDto);
@@ -123,7 +123,7 @@ namespace WebAPIObligatorio.Controllers
             }
             catch
             {
-                return StatusCode(500, "Ocurrio un error inesperado");
+                return StatusCode(500, "An unexpected error occurred");
             }
         }
 
@@ -148,8 +148,8 @@ namespace WebAPIObligatorio.Controllers
             if (tipoCabañaDto == null || id!=tipoCabañaDto.Id|| string.IsNullOrEmpty(email)) return BadRequest("To edit a Type of Cabin you need provide the id of Type Cabin and the email of the user that is doing the changes");
             try
             {
-                Usuario user = CU_GetUserByEmail.GetUsuarioByEmail(email);
-                if (user.Rol.Valor.ToLower() != "administrador")
+                UsuarioDTO user = CU_GetUserByEmail.GetUsuarioByEmail(email);
+                if (user.Rol.ToLower() != "administrador")
                 {
                     return BadRequest("The user " + email + " doesn't have the permissions to edit this");
                 }
@@ -165,11 +165,11 @@ namespace WebAPIObligatorio.Controllers
             }
             catch (ExcepcionesBaseDeDatos ex)
             {
-                return StatusCode(500, "Error al conectarse a la base de datos");
+                return StatusCode(500, "Error connecting to database");
             }
             catch
             {
-                return StatusCode(500, "Ocurrio un error inesperado" );
+                return StatusCode(500, "An unexpected error occurred" );
             }
         }
 
@@ -192,15 +192,15 @@ namespace WebAPIObligatorio.Controllers
             if (id < 0 || string.IsNullOrEmpty(email)) return BadRequest("To Delete a Type of Cabin you need provide the id of Type Cabin and the email of the user that is doing the changes");
             try
             {
-                Usuario user = CU_GetUserByEmail.GetUsuarioByEmail(email);
-                if (user.Rol.Valor.ToLower() != "administrador")
+                UsuarioDTO user = CU_GetUserByEmail.GetUsuarioByEmail(email);
+                if (user.Rol.ToLower() != "administrador")
                 {
                     return BadRequest("The user " + email + " doesn't have the permissions to delete this");
                 }
                 else
                 {
                     TipoCabañaDTO tipoCabaDto = CU_BuscarPorId.BuscarPorId(id);
-                    if (tipoCabaDto == null) return NotFound("El tipo de cabaña que se quiere eliminar no existe en el sistema");
+                    if (tipoCabaDto == null) return NotFound("The type of cabin you want to delete does not exist in the system");
                     CU_EliminarTipo.BajaTipoCabaña(id);
                     return NoContent();
                 }
@@ -211,7 +211,7 @@ namespace WebAPIObligatorio.Controllers
             }
             catch 
             {
-                return StatusCode(500,"Ocurrio un error inesperado");
+                return StatusCode(500,"An unexpected error occurred");
             }
         }
 
@@ -231,16 +231,16 @@ namespace WebAPIObligatorio.Controllers
         [HttpGet("Nombre/{nombre}")]
         public IActionResult GETBuscarPoroNombre(string nombre) //BUSCAR POR NOMBRE
         {
-            if (string.IsNullOrEmpty(nombre)) return BadRequest("El nombre no puede ser nulo");
+            if (string.IsNullOrEmpty(nombre)) return BadRequest("The name to search cannot be null");
             try
             {
                 TipoCabañaDTO tipoBuscado = CU_BuscarPorNombre.BuscarTipoPorNombre(nombre.ToLower());
-                if (tipoBuscado == null) return NotFound("No hay ningun tipo de cabaña con ese nombre");
+                if (tipoBuscado == null) return NotFound("There is not any Type Of Cabin with that name");
                 return CreatedAtRoute("RutaDetailTipo", new { id = tipoBuscado.Id }, tipoBuscado);
             }
             catch
             {
-                return StatusCode(500, "Ocurrio un error inesperado");
+                return StatusCode(500, "An unexpected error occurred");
             }
         }
 

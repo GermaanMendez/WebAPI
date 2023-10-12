@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CasosUso.CU_Cabaña.InterfacesCU
 {
-    public interface IListarPorHabilitadas
+    public interface IListarPorNOHabilitadas
     {
         IEnumerable<CabañaDTO> ListarCabañasHabilitadas();
     }

@@ -30,12 +30,25 @@ namespace CasosUso.CU_Cabaña.CasosUso
                 CantidadPersonasMax = cab.CantidadPersonasMax,
                 IdTipoCabaña = cab.IdTipoCabaña,
                 tipoCabaña=cab.TipoCabaña,
-                Usuario = cab.Usuario,
+                Usuario = ToUsuarioDTO(cab.Usuario),
                 IdUsuario = cab.Usuario.Id,
                 PrecioDiario = cab.PrecioPorDia
 
             });
 
+        }
+        public UsuarioDTO ToUsuarioDTO(Usuario usuario)
+        {
+            return new UsuarioDTO()
+            {
+                Id = usuario.Id,
+                Nombre = usuario.Nombre.Valor,
+                Apellido = usuario.Apellido.Valor,
+                Email = usuario.Email.Valor,
+                Contraseña = usuario.Contraseña.Valor,
+                Rol = usuario.Rol.Valor,
+
+            };
         }
     }
 }

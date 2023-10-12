@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Dominio_Interfaces.EnitdadesNegocio;
 using Dominio_Interfaces.ValueObjects.Cabaña;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DTOS
 {
@@ -24,12 +25,13 @@ namespace DTOS
 
             public TipoCabaña ToTipoCabaña()
             {
-                return new TipoCabaña()
+                var TipoCabaña = new TipoCabaña()
                 {
-                   Id=this.Id,
-                   Nombre=this.Nombre,
-                   Descripcion=this.Descripcion,
+                    Id = this.Id,
+                    Descripcion = this.Descripcion,
                 };
+                    TipoCabaña.SetNombre(this.Nombre);
+                return TipoCabaña;
             }
 
 

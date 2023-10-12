@@ -1,4 +1,5 @@
-﻿using CasosUso.CU_AlquilerCabaña.InterfacesCU;
+﻿using CasosUso.CU_Cabaña.InterfacesCU;
+using CasosUso.CU_Usuario.CUInterfaces;
 using Dominio_Interfaces.EnitdadesNegocio;
 using Dominio_Interfaces.InterfacesRepositorios;
 using DTOS;
@@ -8,25 +9,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CasosUso.CU_AlquilerCabaña.CasosUso
+namespace CasosUso.CU_Usuario.UserCases
 {
     public class CU_ListarAlquileresRealizadosPorUsuario : IListarAlquileresRealizadosPorUsuario
     {
-        IRepositorioAlquilerCabaña RepoAlquiler { get; set; }
-        public CU_ListarAlquileresRealizadosPorUsuario(IRepositorioAlquilerCabaña repo)
+        IRepositorioUsuario RepoUsuario{ get; set; }
+        IConvertCabañaToDTO ConvertCabañaToDTO { get; set; }
+        public CU_ListarAlquileresRealizadosPorUsuario(IRepositorioUsuario repo, IConvertCabañaToDTO convert)
         {
-            RepoAlquiler = repo;   
+            RepoUsuario = repo;
+            ConvertCabañaToDTO = convert;
         }
         public IEnumerable<AlquilerCabañaDTO> ListarAlquileresRealizadosPorUsuario(string emailUsuario)
         {
-            return RepoAlquiler.ObtenerAlquileresRealizadosPorUsuario(emailUsuario).Select(alq => new AlquilerCabañaDTO()
+            return RepoUsuario.ObtenerAlquileresRealizadosPorUsuario(emailUsuario).Select(alq => new AlquilerCabañaDTO()
             {
+                Id=alq.IdAlquiler,
                 FechaAlquilerDesde = alq.FechaAlquilerDesde,
                 FechaAlquilerHasta = alq.FechaAlquilerDesde,
                 Precio = alq.Precio,
                 UsuarioId = alq.UsuarioId,
                 CabañaId = alq.CabañaId,
-                Cabaña=alq.Cabaña
+                Cabaña = ConvertCabañaToDTO.convertCabañaToDTO(alq.Cabaña)
             });
         }
     }

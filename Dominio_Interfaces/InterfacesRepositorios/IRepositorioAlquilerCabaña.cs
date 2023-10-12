@@ -11,7 +11,6 @@ namespace Dominio_Interfaces.InterfacesRepositorios
     {
         void EditarAlquilerCabaña(string emailUsuario, AlquilerCabaña obj);
         bool EliminarAlquilerCabaña(string emailUsuario, int idAlquiler);
-        IEnumerable<AlquilerCabaña> ObtenerAlquileresRealizadosPorUsuario(string emailUsuario);
         IEnumerable<AlquilerCabaña> ObtenerAlquileresDeMiCabaña(string emailUsuario,int idCabaña);
 
     }

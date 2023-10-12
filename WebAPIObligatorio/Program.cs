@@ -70,11 +70,15 @@ builder.Services.AddScoped<IBuscarCabañaPorid, CU_BuscarCabañaPorId>();
 builder.Services.AddScoped<IEliminarCabaña, CU_EliminarCabaña>();
 builder.Services.AddScoped<IListarEnRangoFechas, CU_ListarEnRangoFechas>();
 builder.Services.AddScoped<IListarPorCantPersonas, CU_ListarPorCantPersonas>();
-builder.Services.AddScoped<IListarPorHabilitadas, CU_ListarPorHabilitadas>();
+builder.Services.AddScoped<IListarPorNOHabilitadas, CU_ListarPorNOHabilitadas>();
 builder.Services.AddScoped<IListarPorMonto, CU_ListarPorMonto>();
 builder.Services.AddScoped<IListarPorTexto, CU_ListarPorTexto>();
 builder.Services.AddScoped<IListarPorTipo, CU_ListarPorTipo>();
 builder.Services.AddScoped<IListarTodas, CU_ListarTodas>();
+builder.Services.AddScoped<IConvertCabañaToDTO, CU_ConvertCabañaToDTO>();
+builder.Services.AddScoped<IEditarCabaña, CU_EditarCabaña>();
+builder.Services.AddScoped<IHabilitarCabaña, CU_HabilitarCabaña>();
+builder.Services.AddScoped<IDeshabilitarCabaña, CU_DeshabilitarCabaña>();
 //INYECCION Casos de uso tipo cabañas
 builder.Services.AddScoped<IActualizarTipoCabaña, CU_ActualizarTipoCabaña>();
 builder.Services.AddScoped<IAltaTipoCabaña, CU_AltaTipoCabaña>();
@@ -102,6 +106,7 @@ builder.Services.AddScoped<I_RegistrarUsuario, CU_RegistrarUsuario>();
 builder.Services.AddScoped<I_ListarUsuarios, CU_ListarUsuarios>();
 builder.Services.AddScoped<IGetUsuarioByEmail,CU_GetUsuarioByEmail>();
 builder.Services.AddScoped<IListarCabañasListadasPorDueño, CU_ListarCabañasListadasPorDueño>();
+builder.Services.AddScoped<IConvertUserToDTO, CU_ConvertUserToDTO>();
 //Parametros
 builder.Services.AddScoped<IObtenerValorParam, CU_ObtenerValorParametro>();
 

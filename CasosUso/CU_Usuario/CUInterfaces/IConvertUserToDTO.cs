@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace CasosUso.CU_Usuario.CUInterfaces
 {
-    public interface IGetUsuarioByEmail
+    public interface IConvertUserToDTO
     {
-        UsuarioDTO GetUsuarioByEmail(string email);
+        UsuarioDTO ToUsuarioDTO(Usuario user);
     }
 }

@@ -1,5 +1,7 @@
 ﻿using CasosUso.CU_Usuario.CUInterfaces;
+using Dominio_Interfaces.EnitdadesNegocio;
 using Dominio_Interfaces.InterfacesRepositorios;
+using Dominio_Interfaces.ValueObjects.Usuario;
 using DTOS;
 using System;
 using System.Collections.Generic;
@@ -12,10 +14,12 @@ namespace CasosUso.CU_Usuario.UserCases
     public class CU_ListarCabañasListadasPorDueño:IListarCabañasListadasPorDueño
     {
         public IRepositorioUsuario RepoUsuario { get; set; }
+        public IConvertUserToDTO ConvertUserToDTO { get; set; }
 
-        public CU_ListarCabañasListadasPorDueño(IRepositorioUsuario repo)
+        public CU_ListarCabañasListadasPorDueño(IRepositorioUsuario repo, IConvertUserToDTO covnvert)
         {
             RepoUsuario = repo;
+            ConvertUserToDTO = covnvert;
         }
 
         public IEnumerable<CabañaDTO> UserListedCabins(string email)
@@ -30,11 +34,14 @@ namespace CasosUso.CU_Usuario.UserCases
                 EstaHabilitada = cab.EstaHabilitada,
                 CantidadPersonasMax = cab.CantidadPersonasMax,
                 IdTipoCabaña = cab.IdTipoCabaña,
-                Usuario = cab.Usuario,
+                Usuario = ConvertUserToDTO.ToUsuarioDTO(cab.Usuario)
                 //IdUsuario = cab.IdUsuario
             });
 
 
         }
+
+
+
     }
 }

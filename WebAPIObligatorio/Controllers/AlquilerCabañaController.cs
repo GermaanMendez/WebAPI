@@ -1,6 +1,7 @@
 ﻿using CasosUso.CU_AlquilerCabaña.InterfacesCU;
 using CasosUso.CU_Cabaña.CasosUso;
 using CasosUso.CU_TipoCabaña.CasosUso;
+using CasosUso.CU_Usuario.CUInterfaces;
 using Dominio_Interfaces.EnitdadesNegocio;
 using Dominio_Interfaces.ExepcionesPropias;
 using DTOS;
@@ -19,7 +20,6 @@ namespace WebAPIObligatorio.Controllers
         public IEliminarAlquilerCabaña CU_EliminarAlquilerCabaña { get; set; }
         public IEditarAlquilerCabaña CU_EditarAlquilerCabaña { get; set; }
         public IListarAlquileresDeMiCabañaDueño CU_ListarAlquileresDeMiCabañaDueño { get; set; }
-        public IListarAlquileresRealizadosPorUsuario CU_ListarAlquileresRealizadosUsuario { get; set; }
 
         public AlquilerCabañaController(IAltaAlquilerCabaña cuAlta, IEliminarAlquilerCabaña cuBaja, IEditarAlquilerCabaña cuEditar, IListarAlquileresDeMiCabañaDueño cuListarDueño, IListarAlquileresRealizadosPorUsuario cuListarAlquileresUsuario, IBuscarAlquilerPorId cuBuscarAlqId)
         {
@@ -27,18 +27,17 @@ namespace WebAPIObligatorio.Controllers
             CU_EliminarAlquilerCabaña = cuBaja;
             CU_EditarAlquilerCabaña = cuEditar;
             CU_ListarAlquileresDeMiCabañaDueño = cuListarDueño;
-            CU_ListarAlquileresRealizadosUsuario = cuListarAlquileresUsuario;
             CU_BuscarAlquilerPorId = cuBuscarAlqId;
         }
 
         [HttpPost]
         public IActionResult Post([FromBody] AlquilerCabañaNuevoDTO? alquilerCabañaDto)
         {
-            if (alquilerCabañaDto == null) return BadRequest("No se puede crear un alquiler vacia");
+            if (alquilerCabañaDto == null) return BadRequest("The rental to be created cannot be null");
             try
             {
                 CU_AltaAlquilerCabaña.AltaAlquilerCabaña(alquilerCabañaDto);
-                return Ok("Alquiler creado con exito");
+                return Ok("Rental created successfully");
             }
             catch (ExepcionesAlquileresCabaña ex)
             {
@@ -46,7 +45,7 @@ namespace WebAPIObligatorio.Controllers
             }
             catch
             {
-                return StatusCode(500, "Ocurrio un error inesperado");
+                return StatusCode(500, "An unexpected error occurred");
             }
         }
 
@@ -54,7 +53,7 @@ namespace WebAPIObligatorio.Controllers
         //[Authorize]
         public IActionResult Delete(string emailDueño, int idAlquilerABorraar)
         {
-            if (string.IsNullOrEmpty(emailDueño) || idAlquilerABorraar <= 0) return BadRequest("Se debe proporcionar un alquiler y un dueño para borrar");
+            if (string.IsNullOrEmpty(emailDueño) || idAlquilerABorraar <= 0) return BadRequest("A rent to be deleted and owner's email must be provided");
             try
             {
                 CU_EliminarAlquilerCabaña.EliminarAlquilerCabaña(idAlquilerABorraar, emailDueño);
@@ -62,27 +61,28 @@ namespace WebAPIObligatorio.Controllers
             }
             catch (ExepcionesAlquileresCabaña ex)
             {
-                return BadRequest("No se pudo eliminar el alquiler Error: " + ex.Message);
+                return BadRequest("Could not remove rent. Error: " + ex.Message);
             }
             catch
             {
-                return StatusCode(500, "Ocurrio un error inesperado");
+                return StatusCode(500, "An unexpected error occurred");
             }
         }
+        
 
         [HttpGet("{id}", Name = "RutaDetailAlquiler")]
         public IActionResult Get(int id) //DETAILS
         {
             try
             {
-                if (id <= 0) return BadRequest("El id de alquiler debe ser un entero positivo");
+                if (id <= 0) return BadRequest("Invalid Id");
                 AlquilerCabañaDTO buscado = CU_BuscarAlquilerPorId.ObtenerPorId(id);
-                if (buscado == null) return NotFound($"El alquiler con el id: {id} no existe en el sistema");
+                if (buscado == null) return NotFound($"The rental with ID: {id} does not exist");
                 return Ok(buscado);
             }
             catch
             {
-                return StatusCode(500, "Ocurrio un error inesperado");
+                return StatusCode(500, "An unexpected error occurred");
             }
         }
 
@@ -91,10 +91,10 @@ namespace WebAPIObligatorio.Controllers
         {
             try
             {
-                if (string.IsNullOrEmpty(emailUsuario) || idCabaña < 1 || idCabaña == null) return BadRequest("Debe proporcionar un email y cabaña válidos");
+                if (string.IsNullOrEmpty(emailUsuario) || idCabaña < 1 || idCabaña == null) return BadRequest("A valid email and Id of  cabin must be provided");
 
                 IEnumerable<AlquilerCabañaDTO> alquileres = CU_ListarAlquileresDeMiCabañaDueño.ListarAlquileresDeMiCabañaDueño(emailUsuario, idCabaña);
-                if (!alquileres.Any()) return NotFound("No se encontró ningún alquiler para la cabaña seleccionada");
+                if (!alquileres.Any()) return NotFound("No rental was found for the selected cabin");
                 return Ok(alquileres);
             }
             catch (ExepcionesAlquileresCabaña ex)
@@ -103,30 +103,10 @@ namespace WebAPIObligatorio.Controllers
             }
             catch
             {
-                return StatusCode(500, "Ocurrió un error inesperado");
+                return StatusCode(500, "An unexpected error occurred");
             }
         }
 
-        [HttpGet("alquileresUsuario/{emailUsuario}")]
-        public IActionResult GetListarAlquileresRealizadosPorUsuario(string emailUsuario)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(emailUsuario)) return BadRequest("Debe proporcionar un email válido");
-
-                IEnumerable<AlquilerCabañaDTO> alquileres = CU_ListarAlquileresRealizadosUsuario.ListarAlquileresRealizadosPorUsuario(emailUsuario);
-                if (!alquileres.Any()) return NotFound("No se encontró ningún alquiler realizado por el usuario");
-                return Ok(alquileres);
-            }
-            catch (ExepcionesAlquileresCabaña ex)
-            {
-                return BadRequest("Error: " + ex.Message);
-            }
-            catch
-            {
-                return StatusCode(500, "Ocurrió un error inesperado");
-            }
-        }
  
 
     }

@@ -15,5 +15,6 @@ namespace Dominio_Interfaces.InterfacesRepositorios
         Usuario GetUsuarioByEmail(string email);
         Usuario GetUsuarioById(int id);
         IEnumerable<Cabaña> UserListedCabins(string email);
+        IEnumerable<AlquilerCabaña> ObtenerAlquileresRealizadosPorUsuario(string emailUsuario);
     }
 }

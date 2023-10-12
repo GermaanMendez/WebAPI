@@ -20,12 +20,12 @@ namespace CasosUso.CU_Cabaña.CasosUso
             RepoCabaña = repoCab;
             RepoUsu = rpoU;
         }
-        public void AltaCabaña(CabañaNuevaDTO nuevo)
+        public void AltaCabaña(CabañaDTO nuevo)
         {
             try
             {
                 Cabaña nuevaCabaña = nuevo.ToCabaña();
-                Usuario dueño = RepoUsu.GetUsuarioById(nuevo.IdUsuario);
+                Usuario dueño = RepoUsu.GetUsuarioByEmail(nuevo.Usuario.Email);
                 nuevaCabaña.Usuario = dueño;
                 nuevaCabaña.Validar();
                 RepoCabaña.Add(nuevaCabaña);
