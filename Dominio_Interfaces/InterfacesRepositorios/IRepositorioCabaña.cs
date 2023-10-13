@@ -20,6 +20,6 @@ namespace Dominio_Interfaces.InterfacesRepositorios
         bool EliminarCabaña(string emailDueño, int idCabaña);
         bool DeshabilitarCabaña(string emailDueño, int idCabaña);
         bool HabilitarCabaña(string emailDueño, int idCabaña);
-
+        void EditarCabaña(Cabaña obj, string email);
     }
 }

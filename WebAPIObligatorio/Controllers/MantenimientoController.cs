@@ -36,11 +36,11 @@ namespace WebAPIObligatorio.Controllers
 
         #region DOCUMENTACION API
         /// <summary>
-        /// Obbtiene todos los mantenmientos en el sistema
+        /// Get all the Maintenances
         /// </summary>
-        /// <returns>Retornará 404 Not Found: Si no hay ninguno en el sistema
-        /// 500 ante errores de servidor o base de datos</returns>
-        /// 200 OK si todo salio bien
+        /// <returns>Returns 404 Not Found: If not exists any Maintenance in the system
+        /// Returns 500 for errors in the server or database 
+        /// Returns 200 OK for success with the list of maintenances</returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -62,13 +62,13 @@ namespace WebAPIObligatorio.Controllers
 
         #region DOCUMENTACION API
         /// <summary>
-        /// Obtiene un mantenimiento por su id
+        /// Get a Maintenance by Id
         /// </summary>
-        /// <param name="id"> Id del mantenimiento a buscar </param>
-        /// <returns>Retornará 400 Bad Request: Si el id es menor igual a 0
-        /// 404 Not Found si no existe un mantenimiento con ese id buscado
-        /// 500 ante errores de servidor o base de datos</returns>
-        /// 200 OK si todo sale bien
+        /// <param name="id"> Id of the maintenance to search </param>
+        /// <returns>Returns 400 Bad Request: If the id is equals or less than zero
+        /// 404 Not Found if is not any maintenance with that Id
+        /// Returns 500 for errors in the server or database
+        /// Returns 200 OK for success </returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -93,17 +93,18 @@ namespace WebAPIObligatorio.Controllers
 
         #region DOCUMENTACION API
         /// <summary>
-        /// Crea un Mantenimiento
+        /// Create Maintenance
         /// </summary>
-        /// <param name="mantenimientodto"> Objeto Mantenimiento  a crear en formato json </param>
-        /// <returns>Retornará 400 Bad Request: si el mantenimiento a crear es nulo o no se cumple con las reglas de negocio (ej: costo mayor a 0)
-        /// 500 ante errores de servidor o base de datos</returns>
-        /// 200 OK si todo sale bien
+        /// <param name="mantenimientodto"> Maintenance Object to create in json format </param>
+        /// <returns>Returns 400 Bad Request:if the maintenance to be created is null or the business rules are not met (e.g. cost greater than 0)
+        /// Returns 500 for errors in the server or database
+        /// Returns 200 OK for success </returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         #endregion
         [HttpPost("{email}")]
+        [Authorize]
       //  [Authorize]
         public IActionResult Post([FromBody] MantenimientoDTO? mantenimientodto,string email)// CREATE
         {
@@ -127,13 +128,13 @@ namespace WebAPIObligatorio.Controllers
 
         #region DOCUMENTACION API
         /// <summary>
-        /// Obtiene todos los mantenimientos realizados para una cabaña
+        /// Gets all maintenance performed for a cabin
         /// </summary>
-        /// <param name="NumeroHabitacion"> Id de la cabaña  </param>
-        /// <returns>Retornará 400 Bad Request: Si el id es menor igual a 0
-        /// 404 Not Found si no existe ningun mantenimiento para esa cabaña
-        /// 500 ante errores de servidor o base de datos</returns>
-        /// 200 OK si todo sale bien
+        /// <param name="NumeroHabitacion"> Cabin ID </param>
+        /// <returns>Returns 400 Bad Request: If the id is less than 0
+        /// 404 Not Found if there is no maintenance for that cabin
+        /// Returns 500 for errors in the server or database
+        /// Returns 200 OK for success </returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -156,15 +157,15 @@ namespace WebAPIObligatorio.Controllers
         }
         #region DOCUMENTACION API
         /// <summary>
-        /// Obtiene los mantenimientos realizados a una cabaña filtrados por fecha
+        /// Obtains the maintenances carried out on a cabin filtered by date
         /// </summary>
-        /// <param name="Id"> Id de la cabaña </param>
-        /// <param name="fecha1"> Fecha minima </param>
-        /// <param name="fecha2"> Fecha maxima </param>
-        /// <returns>Retornará 400 Bad Request: Si el id es menor igual a 0 o si las fechas no son validas
-        /// 404 Not Found si no existe ningun mantenimiento para esa cabaña en ese rango de fechas
-        /// 500 ante errores de servidor o base de datos</returns>
-        /// 200 OK si todo sale bien
+        /// <param name="Id"> Id of the cabin </param>
+        /// <param name="fecha1"> Minimum date </param>
+        /// <param name="fecha2"> Maximum date </param>
+        /// <returns>Returns 400 Bad Request: If the id is less than 0 or if the dates are not valid
+        /// 404 Not Found if there is no maintenance for that cabin in that date range
+        /// Returns 500 for errors in the server or database
+        /// Returns 200 OK for success </returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -190,14 +191,14 @@ namespace WebAPIObligatorio.Controllers
 
         #region DOCUMENTACION API
         /// <summary>
-        /// Obtiene los mantenimientos realizados a cabañas filtrados por la capacidad de las cabañas
+        /// Obtains the maintenances carried out on cabins filtered by the capacity of the cabins
         /// </summary>
-        /// <param name="valor1"> Valor minimo</param>
-        /// <param name="valor2"> Valor maximo </param>
-        /// <returns>Retornará 400 Bad Request: Si los valores ingresados no son validos
-        /// 404 Not Found si no existe ningun mantenimiento para ese rango de valores
-        /// 500 ante errores de servidor o base de datos</returns>
-        /// 200 OK si todo sale bien
+        /// <param name="value1"> Minimum value</param>
+        /// <param name="value2"> Maximum value </param>
+        /// <returns>Returns 400 Bad Request: If the values entered are not valid
+        /// 404 Not Found if there is no maintenance for that range of values
+        /// Returns 500 for errors in the server or database
+        /// Returns 200 OK for success </returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

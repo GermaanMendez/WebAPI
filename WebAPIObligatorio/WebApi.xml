@@ -1,207 +1,332 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>WebAPIObligatorio</name>
+        <name>API PROJECT </name>
     </assembly>
     <members>
-        <member name="M:WebAPIObligatorio.Controllers.CabañaController.Get">
+        <member name="M:WebAPIObligatorio.Controllers.AlquilerCabañaController.Post(DTOS.AlquilerCabañaNuevoDTO)">
             <summary>
-            Obtiene todas las Cabañas
+            Create Rental
             </summary>
-            <returns> 404 Not Found si no existe ninguna cabaña en el sistema 
-            500 ante errores de servidor o base de datos</returns>
-            200 OK si todo sale bien
+            <param name="alquilerCabañaDto"> Rental object to Sign in in json format</param>
+            <returns>Returns 200 OK with the user 
+            400 BadRequest If the Rentalis null - If the user who is creating the Rental is the owner of the cabin - If The cabin is not available to Rentalin that date range
+            500 Server Error</returns>
         </member>
+        <member name="M:WebAPIObligatorio.Controllers.AlquilerCabañaController.Delete(System.String,System.Int32)">
+            <summary>
+            Delete Rental
+            </summary>
+            <param name="emailDueño"> Email of the user that is trying to delete the Rental</param>
+            <param name="idAlquilerABorraar">Id of the Rentalto delete</param>
+            <returns>Returns 200 OK for Success
+            400 BadRequest If the email or Id are null - If the user who is deleting the Rental  does not exists in the system - If the Rental does not exists in the system
+            500 Server Error</returns>
+        </member>
+        <member name="M:WebAPIObligatorio.Controllers.AlquilerCabañaController.Get(System.Int32)">
+            <summary>
+            Get Rental
+            </summary>
+            <param name="id"> Id of the Rental to get </param>
+            <returns>Returns 200 OK with the Rental
+            400 BadRequest If the Id is less than zero - 
+            404 Not Found If the Rental with that Id does not exists in the System
+            500 Server Error</returns>
+        </member>
+        <member name="M:WebAPIObligatorio.Controllers.AlquilerCabañaController.GetListarAlquileresDeMiCabaña(System.String,System.Int32)">
+            <summary>
+            Obtain rentals for a cabin that the user owns
+            </summary>
+            <returns>Returns 200 OK with the Rentals
+            400 BadRequest If the email is null or the Id is less than 1- If the cabin does not exists in the system - If the user does not exists in the system -If the user is not the owner of the cabin
+            404 Not Found If there is not any Rental for that cabin
+            500 Server Error</returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:WebAPIObligatorio.Controllers.CabañaController.Get" -->
         <member name="M:WebAPIObligatorio.Controllers.CabañaController.Get(System.Int32)">
             <summary>
-            Busca una cabaña por su id
+            Get a Cabin for Id
             </summary>
-            <param name="Id"> Id de la cabaña a buscar </param>
-            <returns>Retornará 400 Bad Request: Si el id es menor igual a 0
-            404 Not Found si no existe ninguna cabaña con ese id
-            500 ante errores de servidor o base de datos</returns>
-            200 OK si todo sale bien
+            <param name="Id"> Id of the cabin to search </param>
+            <returns>Return 400 Bad Request: If the number Id is less than zero
+            404 Not Found if there isn't any Cabin with that Id in the system
+            Returns 500 for errors in the server or database
+            200 OK for success </returns>
         </member>
         <member name="M:WebAPIObligatorio.Controllers.CabañaController.Post(DTOS.CabañaDTO)">
             <summary>
-            Crea una cabaña
+            Create Cabin
             </summary>
-            <param name="cabañadto"> Objecto cabaña a crear en formato json </param>
-            <returns>Retornará 400 Bad Request: Si el objeto json no es valido o si el objeto a crear no cumple con las reglas de negocio (ej: tipo de cabaña invaldo)
-            500 ante errores de servidor o base de datos</returns>
-            200 OK si todo sale bien
+            <param name="cabañadto"> Object Cabin to create in json format</param>
+            <returns>Returns 400 Bad Request: If There is already a cabin with that name in the system- If the json object is not valid or the object to be created does not comply with the business rules (example: invalid Type Of Cabin)
+             Returns 500 for errors in the server or database 
+            200 OK for success</returns>
+        </member>
+        <member name="M:WebAPIObligatorio.Controllers.CabañaController.Put(DTOS.CabañaDTO,System.String)">
+            <summary>
+            Update Cabin
+            </summary>
+            <param name="cabañadto">Cabin object to create in json format </param>
+            <param name="email">Email of the user who is updating the cabin  </param>
+            <returns>Returns 400 Bad Request: If the object to be updated does not comply with the business rules (example: invalid Type Of Cabin) or the email is null or the user with that email is not the owner of the cabin
+             Returns 500 for errors in the server or database 
+             Returns 200 OK for success</returns>
+        </member>
+        <member name="M:WebAPIObligatorio.Controllers.CabañaController.Delete(System.String,System.Int32)">
+            <summary>
+            Delete Cabin
+            </summary>
+            <param name="emailDueño">Email of the user who is deleting the cabin </param>
+            <param name="idCabañaABorraar"> Id of the cabin to delete </param>
+            <returns>Returns 400 Bad Request: If the email or the Id are null - If the cabin with that id does not exists - If the user with that email does not exists - If the user does not have the necessary permissions to delete the cabin
+             Returns 500 for errors in the server or database 
+            Returns 200 OK for success</returns>
         </member>
         <member name="M:WebAPIObligatorio.Controllers.CabañaController.GETBuscarPorTextoNombre(System.String)">
             <summary>
-            Retorna las cabañas que en su nombre contegan el texto ingresado
+            Get Cabins by text in name
             </summary>
-            <param name="texto"> Texto a buscar en el nombre </param>
-            <returns>Retornará 400 Bad Request: Si el texto buscado es nulo
-            404 Not Found si no existe ninguna cabaña que contenga ese texto en el nombre
-            500 ante errores de servidor o base de datos</returns>
-            200 OK si todo sale bien
+            <param name="texto"> Text to search in the name of the cabins </param>
+            <returns>Returns 400 Bad Request: If the text is null 
+            Returns 404 Not Found: If no cabin has that text in the name
+             Returns 500 for errors in the server or database 
+            Returns 200 succes with the list of cabins</returns>
         </member>
         <member name="M:WebAPIObligatorio.Controllers.CabañaController.GETBuscarPorCantPersonas(System.Int32)">
             <summary>
-            Retorna las cabañas que tengan una capacidad mayor o igual a la ingresda
+            Get Cabins by number of guests
             </summary>
-            <param name="numero"> Capacidad minima a buscar </param>
-            <returns>Retornará 400 Bad Request: Si el numero es menor o igual a 0
-            404 Not Found si no existe ninguna cabaña con una capacidad mayor o igual a la ingresada
-            500 ante errores de servidor o base de datos</returns>
-            200 OK si todo sale bien
+            <param name="numero"> The number of guests to search </param>
+            <returns>Returns 400 Bad Request: If the number is equals or less than zero
+            Returns 404 Not Found: If is no cabin that has that capacity of guest
+             Returns 500 for errors in the server or database 
+            Returns 200 succes with the list of cabins</returns>
         </member>
         <member name="M:WebAPIObligatorio.Controllers.CabañaController.GETBuscarPorTipo(System.Int32)">
             <summary>
-            Retorna las cabañas que sean del tipo de cabaña ingresdo
+            Get Cabins by Type Of Cabin
             </summary>
-            <param name="idTipo"> Id del tipo de cabaña a buscar </param>
-            <returns>Retornará 400 Bad Request: Si el Id de tipo es menor o igual a 0
-            404 Not Found si no existe ninguna cabaña de ese tipo
-            500 ante errores de servidor o base de datos</returns>
-            200 OK si todo sale bien
+            <param name="idTipo"> The id of the Type Of Cabin </param>
+            <returns>Returns 400 Bad Request: If the Id is equals or less than zero
+            Returns 404 Not Found: If not exist any cabin of this Type Of Cabin
+             Returns 500 for errors in the server or database 
+            Returns 200 succes with the list of cabins</returns>
         </member>
-        <member name="M:WebAPIObligatorio.Controllers.CabañaController.GETListarNOHabilitadas">
-            <summary>
-            Retorna las cabañas que esten habilitadas
-            </summary>
-            <returns>Retornará  404 Not Found si no existe ninguna cabaña que este habilitada
-            500 ante errores de servidor o base de datos</returns>
-            200 OK si todo sale bien
-        </member>
+        <!-- Badly formed XML comment ignored for member "M:WebAPIObligatorio.Controllers.CabañaController.GETListarNOHabilitadas" -->
         <member name="M:WebAPIObligatorio.Controllers.CabañaController.GETListarPorMonto(System.Int32)">
             <summary>
-            Retorna que tengan jacuzzi, que esten disponibles y ademas su costo diario(costo tipo multiplicado por capacidad de la cabaña) sea menor al ingresado
+            Get Cabins by Daily Price
             </summary>
-            <returns>Retornará  404 Not Found si no existe ninguna cabaña que cumpla con esos requerimientos
-            500 ante errores de servidor o base de datos</returns>
-            200 OK si todo sale bien
+            <param name="monto"> The Daily Price to search the cabins</param>
+            <returns>Returns 400 Bad Request: If The daily price to search is less than zero
+            Returns 404 Not Found: if there is no cabin with a daily price equal to or less than the indicated one
+             Returns 500 for errors in the server or database 
+            Returns 200 succes with the list of cabins</returns>
+        </member>
+        <member name="M:WebAPIObligatorio.Controllers.CabañaController.GETListarHabilitadasEnRangoFechas(System.DateTime,System.DateTime)">
+            <summary>
+            Get cabins available to Rentalin a range of dates
+            </summary>
+            <param name="desde"> Start date</param>
+            <param name="hasta"> End date</param>
+            <returns>Returns 400 Bad Request: If The Start Date is bigger than the End Date
+            Returns 404 Not Found: If not exists any cabin available to Rentalin those dates
+             Returns 500 for errors in the server or database 
+            Returns 200 succes with the list of cabins</returns>
+        </member>
+        <member name="M:WebAPIObligatorio.Controllers.CabañaController.HabilitarCabaña(System.String,System.Int32)">
+            <summary>
+            Enable Cabin
+            </summary>
+            <param name="email"> Email of the user that is trying to Enable the Cabin</param>
+            <param name="idCabaña"> Id of the Cabin</param>
+            <returns>Returns 400 Bad Request: If the email is null or the Id is less than zero - If the user with that email is not an administrator
+             Returns 500 for errors in the server or database 
+            Returns 200 succes with the list of cabins</returns>
+        </member>
+        <member name="M:WebAPIObligatorio.Controllers.CabañaController.DeshabilitarCabaña(System.String,System.Int32)">
+            <summary>
+            Disable Cabin
+            </summary>
+            <param name="email"> Email of the user that is trying to Disable the Cabin</param>
+            <param name="idCabaña"> Id of the Cabin</param>
+            <returns>Returns 400 Bad Request: If the email is null or the Id is less than zero - If the user with that email is not an administrator
+             Returns 500 for errors in the server or database 
+            Returns 200 succes with the list of cabins</returns>
         </member>
         <member name="M:WebAPIObligatorio.Controllers.MantenimientoController.Get">
             <summary>
-            Obbtiene todos los mantenmientos en el sistema
+            Get all the Maintenances
             </summary>
-            <returns>Retornará 404 Not Found: Si no hay ninguno en el sistema
-            500 ante errores de servidor o base de datos</returns>
-            200 OK si todo salio bien
+            <returns>Returns 404 Not Found: If not exists any Maintenance in the system
+            Returns 500 for errors in the server or database 
+            Returns 200 OK for success with the list of maintenances</returns>
         </member>
         <member name="M:WebAPIObligatorio.Controllers.MantenimientoController.Get(System.Int32)">
             <summary>
-            Obtiene un mantenimiento por su id
+            Get a Maintenance by Id
             </summary>
-            <param name="id"> Id del mantenimiento a buscar </param>
-            <returns>Retornará 400 Bad Request: Si el id es menor igual a 0
-            404 Not Found si no existe un mantenimiento con ese id buscado
-            500 ante errores de servidor o base de datos</returns>
-            200 OK si todo sale bien
+            <param name="id"> Id of the maintenance to search </param>
+            <returns>Returns 400 Bad Request: If the id is equals or less than zero
+            404 Not Found if is not any maintenance with that Id
+            Returns 500 for errors in the server or database
+            Returns 200 OK for success </returns>
         </member>
         <member name="M:WebAPIObligatorio.Controllers.MantenimientoController.Post(DTOS.MantenimientoDTO,System.String)">
             <summary>
-            Crea un Mantenimiento
+            Create Maintenance
             </summary>
-            <param name="mantenimientodto"> Objeto Mantenimiento  a crear en formato json </param>
-            <returns>Retornará 400 Bad Request: si el mantenimiento a crear es nulo o no se cumple con las reglas de negocio (ej: costo mayor a 0)
-            500 ante errores de servidor o base de datos</returns>
-            200 OK si todo sale bien
+            <param name="mantenimientodto"> Maintenance Object to create in json format </param>
+            <returns>Returns 400 Bad Request:if the maintenance to be created is null or the business rules are not met (e.g. cost greater than 0)
+            Returns 500 for errors in the server or database
+            Returns 200 OK for success </returns>
         </member>
         <member name="M:WebAPIObligatorio.Controllers.MantenimientoController.GETListarPorCabaña(System.Int32)">
             <summary>
-            Obtiene todos los mantenimientos realizados para una cabaña
+            Gets all maintenance performed for a cabin
             </summary>
-            <param name="NumeroHabitacion"> Id de la cabaña  </param>
-            <returns>Retornará 400 Bad Request: Si el id es menor igual a 0
-            404 Not Found si no existe ningun mantenimiento para esa cabaña
-            500 ante errores de servidor o base de datos</returns>
-            200 OK si todo sale bien
+            <param name="NumeroHabitacion"> Cabin ID </param>
+            <returns>Returns 400 Bad Request: If the id is less than 0
+            404 Not Found if there is no maintenance for that cabin
+            Returns 500 for errors in the server or database
+            Returns 200 OK for success </returns>
         </member>
         <member name="M:WebAPIObligatorio.Controllers.MantenimientoController.GETListarMantenimientosPorFecha(System.Int32,System.DateTime,System.DateTime)">
             <summary>
-            Obtiene los mantenimientos realizados a una cabaña filtrados por fecha
+            Obtains the maintenances carried out on a cabin filtered by date
             </summary>
-            <param name="Id"> Id de la cabaña </param>
-            <param name="fecha1"> Fecha minima </param>
-            <param name="fecha2"> Fecha maxima </param>
-            <returns>Retornará 400 Bad Request: Si el id es menor igual a 0 o si las fechas no son validas
-            404 Not Found si no existe ningun mantenimiento para esa cabaña en ese rango de fechas
-            500 ante errores de servidor o base de datos</returns>
-            200 OK si todo sale bien
+            <param name="Id"> Id of the cabin </param>
+            <param name="fecha1"> Minimum date </param>
+            <param name="fecha2"> Maximum date </param>
+            <returns>Returns 400 Bad Request: If the id is less than 0 or if the dates are not valid
+            404 Not Found if there is no maintenance for that cabin in that date range
+            Returns 500 for errors in the server or database
+            Returns 200 OK for success </returns>
         </member>
         <member name="M:WebAPIObligatorio.Controllers.MantenimientoController.GETListarMantenimientosPorValores(System.Double,System.Double)">
             <summary>
-            Obtiene los mantenimientos realizados a cabañas filtrados por la capacidad de las cabañas
+            Obtains the maintenances carried out on cabins filtered by the capacity of the cabins
             </summary>
-            <param name="valor1"> Valor minimo</param>
-            <param name="valor2"> Valor maximo </param>
-            <returns>Retornará 400 Bad Request: Si los valores ingresados no son validos
-            404 Not Found si no existe ningun mantenimiento para ese rango de valores
-            500 ante errores de servidor o base de datos</returns>
-            200 OK si todo sale bien
+            <param name="value1"> Minimum value</param>
+            <param name="value2"> Maximum value </param>
+            <returns>Returns 400 Bad Request: If the values entered are not valid
+            404 Not Found if there is no maintenance for that range of values
+            Returns 500 for errors in the server or database
+            Returns 200 OK for success </returns>
         </member>
         <member name="M:WebAPIObligatorio.Controllers.TipoCabañaController.Get">
             <summary>
-            Trae todos los tipos de cabañas
+            Get all types of cabins
             </summary>
-            <returns>Retornará 404 Not Found si no hay ningun tipo de cabaña registrado
-            500 ante errores de servidor o base de datos y 200 OK si todo salio bien</returns>
+            <returns>Returns 404 Not Found if not exists any Type Of Cabin in the sistem
+            500 for server or database errors and 200 OK if everything went well</returns>
         </member>
         <member name="M:WebAPIObligatorio.Controllers.TipoCabañaController.Get(System.Int32)">
             <summary>
-            Obtiene un tipo de cabaña por su id
+            Gets Type of Cabin by Id
             </summary>
-            <param name="id"> Id del tipo de cabaña que se quiere buscar</param>
-            <returns>Retornará 400 Bad Request: Si el id es no es valido (ej: menor a 0)
-            404 Not Found si no existe ningun tipo de cabaña con ese id
-            500 ante errores de servidor o base de datos</returns>
-            200 OK si se encontro correctamente el tipo de cabañá
+            <param name="id"> Id of the Type of Cabin to search </param>
+            <returns>Returns 400 Bad Request: If the id is less than zero
+            404 Not Found if there is no type of cabin with that id
+            Returns 500 for errors in the server or database
+            Returns 200 OK succes with the Type of Cabin
+            </returns>
         </member>
         <member name="M:WebAPIObligatorio.Controllers.TipoCabañaController.Post(DTOS.TipoCabañaDTO)">
             <summary>
-            Crea un Tipo de Cabaña
+            Create a Type of Cabin
             </summary>
-            <param name="tipoCabañaDto"> Objeto tipo de cabaña a crear en formato json </param>
-            <returns>Retornará 404 Bad Request: Si el objeto a crear es nulo, si no se cumple con las reglas de negocio(ej: caracteres minimos desc)
-            500 ante errores de servidor o base de datos y 201 si se creó correctamente</returns>
+            <param name="tipoCabañaDto"> Type Of Cabin object to create in json format </param>
+            <returns>Returns 404 Bad Request: If the object to be created is null, if the business rules are not met (example: characters minimum descripcion)
+            Returns 500 for server or database errors
+            Returns 200 Ok for success</returns>
         </member>
         <member name="M:WebAPIObligatorio.Controllers.TipoCabañaController.Put(System.Int32,DTOS.TipoCabañaDTO,System.String)">
             <summary>
-            Edita un Tipo de Cabaña
+            Edit a Type Of Cabin
             </summary>
-            <param name="id"> Id de tipo int correspondiente al id  del tipo de cabaña a editar </param>
-            <param name="tipoCabañaDto"> Objeto tipo de cabaña a editar en formato json </param>
-            <returns>Retornará 404 Bad Request: Si el id es  y el tipo no son validos o si no se cumplen con las reglas de negocio (ej: minimo de caracatertes en desc)
-            500 ante errores de servidor o base de datos</returns>
+            <param name="id"> Int type id corresponding to the id of the type of cabin to edit </param>
+            <param name="tipoCabañaDto"> Type Of Cabin object to edit in json format </param>
+            <param name="email">Email of the user who is trying to update the Type Of Cabin</param>
+            <returns>Returns 404 Bad Request: If the Type Of Cabin does not exist in the system - If the user with that email is not an administrator
+            Returns 500 for errors in the server or database
+            Returns 200 OK for success</returns>
         </member>
         <member name="M:WebAPIObligatorio.Controllers.TipoCabañaController.Delete(System.Int32,System.String)">
             <summary>
-            Elimina un Tipo de Cabaña
+            Delete a Type Of Cabin
             </summary>
-            <param name="id"> Id de tipo int correspondiente al id  del tipo de cabaña a borrar </param>
-            <returns>Retornará 404 Bad Request: Si el id es  menor igual a 0 o el tipo no puede ser eliminado por alguna regla de negocio(ej: es usado por una cabañá)
-            404 Not Found si el tipo de cabaña no existe, 500 error servidor, 204 no content si se borrro correctamente</returns>
+            <param name="id"> Id of the Cabin to delete </param>
+            <param name="email"> Email of the user who is trying to delete the Type Of Cabin</param>
+            <returns>Returns 404 Bad Request: If the id is less than 0 - If the Type Of Cabin is being used by a cabin - If the user trying to delete the Type Of Cabin is not an administrator
+            Returns 404 Not Found if the Type Of Cabin does not exist,
+            Returns 500 server error,
+            Returns 204 no content if deleted successfully</returns>
         </member>
         <member name="M:WebAPIObligatorio.Controllers.TipoCabañaController.GETBuscarPoroNombre(System.String)">
             <summary>
-            Busca un tipo de cabaña por nombre
+            Search for a Type Of Cabin by name
             </summary>
-            <param name="nombre"> nombre de tipo string correspondiente al nombre  del tipo de cabaña a buscar </param>
-            <returns>Retornará 400 Bad Request: Si el nombre es nulo 
-            404 Not Found si no existe hay un tipo con ese nombre, 500 error servidor, 201 si todo salio bien</returns>
+            <param name="nombre"> Name of the Type Of Cabin to search </param>
+            <returns>Returns 400 Bad Request: If name is null
+            Returns 404 Not Found if there is no Type Of Cabin with that name
+            Returns 500 server error
+            Returns 201 with Type Of Cabin</returns>
         </member>
         <member name="M:WebAPIObligatorio.Controllers.UsuarioController.Login(DTOS.UsuarioLoginDTO)">
             <summary>
-            Login de usuario
+            User Login
             </summary>
-            <param name="usu"> Objeto usuario a loguearse en formato json </param>
-            <returns>Retornará 200 OK: si el usuariio se logueo correctamente
-            401 Unauthorized  si los datos de logueo (ej: contrseña) son incorrectos</returns>
+            <param name="usu">User object to log in json format </param>
+            <returns>Returns 200 OK login successfully
+            401 Unauthorized If the passowrd or email are wrong</returns>
         </member>
         <member name="M:WebAPIObligatorio.Controllers.UsuarioController.Registro(DTOS.UsuarioDTO)">
             <summary>
-            Registro de usuario
+            User Sign In
             </summary>
-            <param name="usu"> Objeto usuario a registrarse en formato json </param>
-            <returns>Retornará 200 OK: si el usuariio se logueo correctamente
-            400 BadRequest  si los datos de logueo (ej: contrseña) son incorrectos</returns>
+            <param name="usu"> User object to Sign in in json format</param>
+            <returns>Returns 200 OK: Sign In successfully
+            Returns 400 BadRequest If the user is null
+            Returns 500 Server Error</returns>
+        </member>
+        <member name="M:WebAPIObligatorio.Controllers.UsuarioController.Listar">
+            <summary>
+            Ger all Users
+            </summary>
+            <returns>Returns 200 OK: with the list of Users
+            Returns 404 Not Found if is not exists any User in the system
+            Returns 500 Server Error</returns>
+        </member>
+        <member name="M:WebAPIObligatorio.Controllers.UsuarioController.GetUserByEmail(System.String)">
+            <summary>
+            Get User by email
+            </summary>
+            <param name="email"> Email of the User to search</param>
+            <returns>Returns 200 OK with the user 
+            Returns 400 BadRequest If the email is null
+            Returns 404 Not Found if is not any user with that email
+            Returns 500 Server Error</returns>
+        </member>
+        <member name="M:WebAPIObligatorio.Controllers.UsuarioController.GetCabinsListedForRentalByOwner(System.String)">
+            <summary>
+            Get the cabins that the user has listed for Rental
+            </summary>
+            <param name="email"> Email of the User </param>
+            <returns>Returns 200 OK with the list of Cabins 
+            Returns 400 BadRequest If the email is null - If the user with that email does not exists in the system
+            Returns 404 Not Found if is not any cabin listened to Rentalfor the user
+            Returns 500 Server Error</returns>
+        </member>
+        <member name="M:WebAPIObligatorio.Controllers.UsuarioController.GetListarAlquileresRealizadosPorUsuario(System.String)">
+            <summary>
+            Get Rentals that the user has made
+            </summary>
+            <param name="emailUsuario"> Email of the User </param>
+            <returns>Returns 200 OK with the list of Rentals
+            Returns 400 BadRequest If the email is null
+            Returns 404 Not Found if is not any Rental
+            Returns 500 Server Error</returns>
         </member>
     </members>
 </doc>

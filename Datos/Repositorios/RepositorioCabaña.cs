@@ -133,36 +133,20 @@ namespace Datos.Repositorios
 
         public bool Remove(int id)
         {
-            try
-            {
-                Cabaña aBorrar = FindById(id);
-                if (aBorrar == null)
-                {
-                    throw new ExcepcionesCabaña("The cabin you want to delete does not exist in the system");
-                }
-                var TieneAlMenosUnMantenimiento = Contexto.Mantenimientos.Include(mant => mant.Cabaña).Where(mant=> mant.Cabaña.NumeroHabitacion==id).FirstOrDefault();
-                if (TieneAlMenosUnMantenimiento != null)
-                {
-                    throw new ExcepcionesCabaña("The cabin you want to delete has one or more maintenance assigned to it. Please first delete the corresponding maintenance and try again");
-                }
-                else
-                {
-                    Contexto.Cabañas.Remove(aBorrar);
-                    Contexto.SaveChanges();
-                    return true;
-                }
-            }
-            catch (ExcepcionesBaseDeDatos ex)
-            {
-                throw new ExcepcionesBaseDeDatos("Error connecting to database" + ex.Message);
-            }
+            throw new Exception("Not Implemented");
         }
-
         public void Update(Cabaña obj)
+        {
+            throw new Exception("Not Implemented");
+        }
+        public void EditarCabaña(Cabaña obj, string email)
         {
             try
             {
                 obj.Validar();
+                var cabaña = Contexto.Cabañas.Where(cab => cab.NumeroHabitacion == obj.NumeroHabitacion).Include(cab=>cab.Usuario).FirstOrDefault();
+                if(cabaña == null) throw new ExcepcionesCabaña("The cabin that you want to edit does not exist in the system");
+                if(cabaña.Usuario.Email.Valor.ToLower()!=email.ToLower()) throw new ExcepcionesCabaña("The user that is trying to edit the cabin is not the owner of the cabin");
                 Contexto.Cabañas.Update(obj);
                 Contexto.SaveChanges();
             }
@@ -171,7 +155,6 @@ namespace Datos.Repositorios
                 throw new ExcepcionesBaseDeDatos("Error connecting to database" + ex.Message);
             }
         }
-
 
         public IEnumerable<Cabaña> ObtenerCabañasMonto(int monto)
         {
@@ -196,7 +179,7 @@ namespace Datos.Repositorios
                 Usuario dueño = Contexto.Usuarios.Where(usu => usu.Email.Valor.ToLower() == emailDueño.ToLower()).FirstOrDefault();
                 if (dueño != null)
                 {
-                    Cabaña cabaña= Contexto.Cabañas.Where(cab => cab.NumeroHabitacion == idCabaña).FirstOrDefault();
+                    Cabaña cabaña= Contexto.Cabañas.Where(cab => cab.NumeroHabitacion == idCabaña).Include(cab=>cab.Usuario).FirstOrDefault();
                     if (cabaña != null)
                     {
                         if(dueño.Id==cabaña.Usuario.Id || dueño.Rol.Valor == "administrador")

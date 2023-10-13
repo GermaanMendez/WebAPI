@@ -32,7 +32,7 @@ namespace Datos.Repositorios
                 {
                     obj.AsignarPrecio();
                     obj.Validar();
-
+                    
                     var YaExisteAlquiler = Contexto.AlquileresCabañas.Where(alq => alq.Cabaña == obj.Cabaña && ((obj.FechaAlquilerDesde >=alq.FechaAlquilerDesde && obj.FechaAlquilerDesde<=alq.FechaAlquilerHasta)
                                                                                                                 ||obj.FechaAlquilerHasta<=alq.FechaAlquilerHasta && obj.FechaAlquilerHasta>=alq.FechaAlquilerDesde)).FirstOrDefault();
                     if (YaExisteAlquiler == null)
@@ -42,12 +42,12 @@ namespace Datos.Repositorios
                     }
                     else
                     {
-                        throw new ExepcionesAlquileresCabaña("The cabin is not available to rent in that date range");
+                        throw new ExepcionesAlquileresCabaña("The cabin is not available to Rentalin that date range");
                     }
                 }
                 else
                 {
-                    throw new ExepcionesAlquileresCabaña("The Rent to create cannot be null");
+                    throw new ExepcionesAlquileresCabaña("The Rentalto create cannot be null");
                 }
             }
             catch (ExcepcionesBaseDeDatos ex)
@@ -64,7 +64,7 @@ namespace Datos.Repositorios
                 var usuario = ObtenerUsuarioPorEmail(emailUsuario);
                 if (usuario == null) throw new ExepcionesAlquileresCabaña("The user you are trying to delete does not exist on the system");
                 var alquilerEliminar = Contexto.AlquileresCabañas.Where(alq => alq.IdAlquiler == idAlquiler).FirstOrDefault();
-                if (alquilerEliminar == null) throw new ExepcionesAlquileresCabaña("The rental you are trying to delete does not exist in the system");
+                if (alquilerEliminar == null) throw new ExepcionesAlquileresCabaña("The Rental you are trying to delete does not exist in the system");
                 if (alquilerEliminar.Usuario == usuario)
                 {
                     Contexto.AlquileresCabañas.Remove(alquilerEliminar);
@@ -73,7 +73,7 @@ namespace Datos.Repositorios
                 }
                 else
                 {
-                    throw new ExepcionesAlquileresCabaña("The user does not have the necessary permissions to delete the rental");
+                    throw new ExepcionesAlquileresCabaña("The user does not have the necessary permissions to delete the Rental");
                 }
             }
             catch (ExcepcionesBaseDeDatos ex)
@@ -86,9 +86,9 @@ namespace Datos.Repositorios
         {
             try
             {
-                if (obj == null || emailUsuario == null) throw new ExepcionesAlquileresCabaña("The rental to be edited cannot be null");
+                if (obj == null || emailUsuario == null) throw new ExepcionesAlquileresCabaña("The Rental to be edited cannot be null");
                 var usuario = ObtenerUsuarioPorEmail(emailUsuario);
-                if (usuario == null) throw new ExepcionesAlquileresCabaña("The user trying to edit the rental does not exist in the system");
+                if (usuario == null) throw new ExepcionesAlquileresCabaña("The user trying to edit the Rental does not exist in the system");
                 if (obj.Usuario == usuario)
                 {
                     obj.Validar();
@@ -97,7 +97,7 @@ namespace Datos.Repositorios
                 }
                 else
                 {
-                    throw new ExepcionesAlquileresCabaña("The user trying to edit the rental does not have the necessary permissions");
+                    throw new ExepcionesAlquileresCabaña("The user trying to edit the Rental does not have the necessary permissions");
                 }
             }
             catch (ExcepcionesBaseDeDatos ex)
@@ -121,7 +121,7 @@ namespace Datos.Repositorios
         }
         public AlquilerCabaña FindById(int id)
         {
-            if(id<1) throw new ExepcionesAlquileresCabaña("The rental id to search must be a number greater than 0");
+            if(id<1) throw new ExepcionesAlquileresCabaña("The Rental id to search must be a number greater than 0");
             var resultado = Contexto.AlquileresCabañas.Include(alq=>alq.Usuario).Include(alq=>alq.Cabaña).Where(alq=>alq.IdAlquiler==id).FirstOrDefault();
             return resultado;
         }

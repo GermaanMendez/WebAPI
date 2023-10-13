@@ -22,7 +22,7 @@ namespace Dominio_Interfaces.EnitdadesNegocio
         [Required]
         [RegularExpression(@"^[a-zA-ZñÑ]+([a-zA-ZñÑ ]*[a-zA-ZñÑ])?$", ErrorMessage = "El campo Nombre debe contener solamente caracteres alfabéticos y espacios embebidos, pero no al principio o al final.")]
         [Column(TypeName ="nvarchar(100)")]
-        private string Nombre { get; set; }
+        public string Nombre { get; set; }
         public string Descripcion { get; set; }
 
         public void Validar()

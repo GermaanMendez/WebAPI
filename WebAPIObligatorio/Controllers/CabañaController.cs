@@ -77,11 +77,11 @@ namespace WebAPIObligatorio.Controllers
 
         #region DOCUMENTACION API
         /// <summary>
-        /// Obtiene todas las Cabañas
+        /// Get all the Cabins
         /// </summary>
-        /// <returns> 404 Not Found si no existe ninguna cabaña en el sistema 
-        /// 500 ante errores de servidor o base de datos</returns>
-        /// 200 OK si todo sale bien
+        /// <returns> Returns 404 Not Found if there aren't any Cabin in the system
+        /// Returns 500 for errors in the server or database </returns>
+        /// Returns 200 succes with the list of cabins</returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -110,13 +110,13 @@ namespace WebAPIObligatorio.Controllers
 
         #region DOCUMENTACION API
         /// <summary>
-        /// Busca una cabaña por su id
+        /// Get a Cabin for Id
         /// </summary>
-        /// <param name="Id"> Id de la cabaña a buscar </param>
-        /// <returns>Retornará 400 Bad Request: Si el id es menor igual a 0
-        /// 404 Not Found si no existe ninguna cabaña con ese id
-        /// 500 ante errores de servidor o base de datos</returns>
-        /// 200 OK si todo sale bien
+        /// <param name="Id"> Id of the cabin to search </param>
+        /// <returns>Return 400 Bad Request: If the number Id is less than zero
+        /// 404 Not Found if there isn't any Cabin with that Id in the system
+        /// Returns 500 for errors in the server or database
+        /// 200 OK for success </returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -139,20 +139,20 @@ namespace WebAPIObligatorio.Controllers
 
         }
 
-        #region DOCUMENTACION API
+        #region API DOCUMENTATION
         /// <summary>
-        /// Crea una cabaña
+        /// Create Cabin
         /// </summary>
-        /// <param name="cabañadto"> Objecto cabaña a crear en formato json </param>
-        /// <returns>Retornará 400 Bad Request: Si el objeto json no es valido o si el objeto a crear no cumple con las reglas de negocio (ej: tipo de cabaña invaldo)
-        /// 500 ante errores de servidor o base de datos</returns>
-        /// 200 OK si todo sale bien
+        /// <param name="cabañadto"> Object Cabin to create in json format</param>
+        /// <returns>Returns 400 Bad Request: If There is already a cabin with that name in the system- If the json object is not valid or the object to be created does not comply with the business rules (example: invalid Type Of Cabin)
+        ///  Returns 500 for errors in the server or database 
+        /// 200 OK for success</returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         #endregion
         [HttpPost]
-        //[Authorize]
+        [Authorize]
         public IActionResult Post([FromBody] CabañaDTO? cabañadto)// CREATE
         {
             if (cabañadto == null) return BadRequest("The cabin to create cannot be null");
@@ -170,14 +170,28 @@ namespace WebAPIObligatorio.Controllers
                 return StatusCode(500,"An unexpected error occurred");
             }
         }
+
+        #region DOCUMENTACION API
+        /// <summary>
+        /// Update Cabin
+        /// </summary>
+        /// <param name="cabañadto">Cabin object to create in json format </param>
+        /// <param name="email">Email of the user who is updating the cabin  </param>
+        /// <returns>Returns 400 Bad Request: If the object to be updated does not comply with the business rules (example: invalid Type Of Cabin) or the email is null or the user with that email is not the owner of the cabin
+        ///  Returns 500 for errors in the server or database 
+        ///  Returns 200 OK for success</returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        #endregion
         [HttpPut("edit/{email}")]
-        //[Authorize]
+        [Authorize]
         public IActionResult Put([FromBody] CabañaDTO? cabañaDto, string email)
         {
             if (cabañaDto == null|| string.IsNullOrEmpty(email)) return BadRequest("To edit a Cabin you need provide the Cabin and the email of the user that is doing the changes");
             try
             {
-                    CU_EditarCabaña.edit(cabañaDto);
+                    CU_EditarCabaña.edit(cabañaDto,email);
                     return Ok();
             }
             catch (ExcepcionesTipoCabaña ex)
@@ -193,9 +207,21 @@ namespace WebAPIObligatorio.Controllers
                 return StatusCode(500, "An unexpected error occurred");
             }
         }
-
+        #region DOCUMENTACION API
+        /// <summary>
+        /// Delete Cabin
+        /// </summary>
+        /// <param name="emailDueño">Email of the user who is deleting the cabin </param>
+        /// <param name="idCabañaABorraar"> Id of the cabin to delete </param>
+        /// <returns>Returns 400 Bad Request: If the email or the Id are null - If the cabin with that id does not exists - If the user with that email does not exists - If the user does not have the necessary permissions to delete the cabin
+        ///  Returns 500 for errors in the server or database 
+        /// Returns 200 OK for success</returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        #endregion
         [HttpDelete("{emailDueño}+{idCabañaABorraar}")]
-        //[Authorize]
+        [Authorize]
         public IActionResult Delete(string emailDueño, int idCabañaABorraar)
         {
             if (string.IsNullOrEmpty(emailDueño) || idCabañaABorraar <= 0) return BadRequest("Se debe proporcionar una cabaña y un dueño para borrar");
@@ -229,17 +255,17 @@ namespace WebAPIObligatorio.Controllers
 
         #region DOCUMENTACION API
         /// <summary>
-        /// Retorna las cabañas que en su nombre contegan el texto ingresado
+        /// Get Cabins by text in name
         /// </summary>
-        /// <param name="texto"> Texto a buscar en el nombre </param>
-        /// <returns>Retornará 400 Bad Request: Si el texto buscado es nulo
-        /// 404 Not Found si no existe ninguna cabaña que contenga ese texto en el nombre
-        /// 500 ante errores de servidor o base de datos</returns>
-        /// 200 OK si todo sale bien
+        /// <param name="texto"> Text to search in the name of the cabins </param>
+        /// <returns>Returns 400 Bad Request: If the text is null 
+        /// Returns 404 Not Found: If no cabin has that text in the name
+        ///  Returns 500 for errors in the server or database 
+        /// Returns 200 succes with the list of cabins</returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         #endregion
         [HttpGet("texto/{texto}")]
         public IActionResult GETBuscarPorTextoNombre(string texto) //LISTAR POR TEXTO EN EL NOMBRE
@@ -260,17 +286,17 @@ namespace WebAPIObligatorio.Controllers
 
         #region DOCUMENTACION API
         /// <summary>
-        /// Retorna las cabañas que tengan una capacidad mayor o igual a la ingresda
+        /// Get Cabins by number of guests
         /// </summary>
-        /// <param name="numero"> Capacidad minima a buscar </param>
-        /// <returns>Retornará 400 Bad Request: Si el numero es menor o igual a 0
-        /// 404 Not Found si no existe ninguna cabaña con una capacidad mayor o igual a la ingresada
-        /// 500 ante errores de servidor o base de datos</returns>
-        /// 200 OK si todo sale bien
+        /// <param name="numero"> The number of guests to search </param>
+        /// <returns>Returns 400 Bad Request: If the number is equals or less than zero
+        /// Returns 404 Not Found: If is no cabin that has that capacity of guest
+        ///  Returns 500 for errors in the server or database 
+        /// Returns 200 succes with the list of cabins</returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         #endregion
         [HttpGet("cantidadPersonas/{numero}")]
         public IActionResult GETBuscarPorCantPersonas(int numero)
@@ -292,22 +318,22 @@ namespace WebAPIObligatorio.Controllers
 
         #region DOCUMENTACION API
         /// <summary>
-        /// Retorna las cabañas que sean del tipo de cabaña ingresdo
+        /// Get Cabins by Type Of Cabin
         /// </summary>
-        /// <param name="idTipo"> Id del tipo de cabaña a buscar </param>
-        /// <returns>Retornará 400 Bad Request: Si el Id de tipo es menor o igual a 0
-        /// 404 Not Found si no existe ninguna cabaña de ese tipo
-        /// 500 ante errores de servidor o base de datos</returns>
-        /// 200 OK si todo sale bien
+        /// <param name="idTipo"> The id of the Type Of Cabin </param>
+        /// <returns>Returns 400 Bad Request: If the Id is equals or less than zero
+        /// Returns 404 Not Found: If not exist any cabin of this Type Of Cabin
+        ///  Returns 500 for errors in the server or database 
+        /// Returns 200 succes with the list of cabins</returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         #endregion
         [HttpGet("tipo/{idTipo}")]
         public IActionResult GETBuscarPorTipo(int idTipo)
         {
-            if (idTipo <= 0) return BadRequest("Cabin type cannot be null");
+            if (idTipo <= 0) return BadRequest("Type Of Cabin cannot be null");
             try
             {
                 IEnumerable<CabañaDTO> cabañasdtos = CU_ListarPorTipo.ListarPorTipo(idTipo);
@@ -324,11 +350,11 @@ namespace WebAPIObligatorio.Controllers
 
         #region DOCUMENTACION API
         /// <summary>
-        /// Retorna las cabañas que esten habilitadas
+        /// Get disabled Cabins
         /// </summary>
-        /// <returns>Retornará  404 Not Found si no existe ninguna cabaña que este habilitada
-        /// 500 ante errores de servidor o base de datos</returns>
-        /// 200 OK si todo sale bien
+        /// Returns 404 Not Found: If there is no cabin that is disabled
+        ///  Returns 500 for errors in the server or database 
+        /// Returns 200 succes with the list of cabins</returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -349,21 +375,24 @@ namespace WebAPIObligatorio.Controllers
         }
         #region DOCUMENTACION API
         /// <summary>
-        /// Retorna que tengan jacuzzi, que esten disponibles y ademas su costo diario(costo tipo multiplicado por capacidad de la cabaña) sea menor al ingresado
+        /// Get Cabins by Daily Price
         /// </summary>
-        /// <returns>Retornará  404 Not Found si no existe ninguna cabaña que cumpla con esos requerimientos
-        /// 500 ante errores de servidor o base de datos</returns>
-        /// 200 OK si todo sale bien
+        /// <param name="monto"> The Daily Price to search the cabins</param>
+        /// <returns>Returns 400 Bad Request: If The daily price to search is less than zero
+        /// Returns 404 Not Found: if there is no cabin with a daily price equal to or less than the indicated one
+        ///  Returns 500 for errors in the server or database 
+        /// Returns 200 succes with the list of cabins</returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         #endregion
-
         [HttpGet("Monto/{monto}")]
         public IActionResult GETListarPorMonto( int monto)
         {
             try
             {
+                if (monto <= 0) return BadRequest("The daily price to search cannot be less than zero");
                 IEnumerable<CabañaDTO> cabañasdtos = CU_ListarPorTipoYMonto.ListarCabañasPorMonto(monto);
                 if (!cabañasdtos.Any()) return NotFound("There is no cabin with a daily price lower than or equal to the one searched for. ");
                 return Ok(cabañasdtos);
@@ -374,6 +403,22 @@ namespace WebAPIObligatorio.Controllers
             }
         }
 
+        #region DOCUMENTACION API
+        /// <summary>
+        /// Get cabins available to Rentalin a range of dates
+        /// </summary>
+        /// <param name="desde"> Start date</param>
+        /// <param name="hasta"> End date</param>
+        /// <returns>Returns 400 Bad Request: If The Start Date is bigger than the End Date
+        /// Returns 404 Not Found: If not exists any cabin available to Rentalin those dates
+        ///  Returns 500 for errors in the server or database 
+        /// Returns 200 succes with the list of cabins</returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        #endregion
+
         [HttpGet("desde/{desde}/hasta{hasta}")]
         public IActionResult GETListarHabilitadasEnRangoFechas(DateTime desde,DateTime hasta)
         {
@@ -381,7 +426,7 @@ namespace WebAPIObligatorio.Controllers
             {
                 if (desde>hasta ) return BadRequest("The start date cannot be greater than the end date");
                 IEnumerable<CabañaDTO> cabañasdtos = CU_ListarDisponiblesEnRango.ListarEnRangoFechas(desde,hasta);
-                if (!cabañasdtos.Any()) return NotFound("There are no cabins available to rent in that date range");
+                if (!cabañasdtos.Any()) return NotFound("There are no cabins available to Rentalin that date range");
                 return Ok(cabañasdtos);
             }
             catch (ExcepcionesCabaña ex)
@@ -398,7 +443,21 @@ namespace WebAPIObligatorio.Controllers
             }
         }
 
+        #region DOCUMENTACION API
+        /// <summary>
+        /// Enable Cabin
+        /// </summary>
+        /// <param name="email"> Email of the user that is trying to Enable the Cabin</param>
+        /// <param name="idCabaña"> Id of the Cabin</param>
+        /// <returns>Returns 400 Bad Request: If the email is null or the Id is less than zero - If the user with that email is not an administrator
+        ///  Returns 500 for errors in the server or database 
+        /// Returns 200 succes with the list of cabins</returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        #endregion
         [HttpPost("habilitar/{email}/{idCabaña}")]
+        [Authorize]
         public IActionResult HabilitarCabaña(string email, int idCabaña)
         {
             try
@@ -421,7 +480,21 @@ namespace WebAPIObligatorio.Controllers
             }
         }
 
+        #region DOCUMENTACION API
+        /// <summary>
+        /// Disable Cabin
+        /// </summary>
+        /// <param name="email"> Email of the user that is trying to Disable the Cabin</param>
+        /// <param name="idCabaña"> Id of the Cabin</param>
+        /// <returns>Returns 400 Bad Request: If the email is null or the Id is less than zero - If the user with that email is not an administrator
+        ///  Returns 500 for errors in the server or database 
+        /// Returns 200 succes with the list of cabins</returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        #endregion
         [HttpPost("deshabilitar/{email}/{idCabaña}")]
+        [Authorize]
         public IActionResult DeshabilitarCabaña(string email, int idCabaña)
         {
             try

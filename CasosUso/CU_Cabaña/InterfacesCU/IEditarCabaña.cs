@@ -9,6 +9,6 @@ namespace CasosUso.CU_Cabaña.InterfacesCU
 {
     public interface IEditarCabaña
     {
-        void edit(CabañaDTO aEditar);
+        void edit(CabañaDTO aEditar,string email);
     }
 }

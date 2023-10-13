@@ -18,11 +18,11 @@ namespace CasosUso.CU_Cabaña.CasosUso
             repoCabaña = rpo;
         }
 
-        public void edit(CabañaDTO aEditar)
+        public void edit(CabañaDTO aEditar,string email)
         {
             Cabaña ediatda = aEditar.ToCabaña();
             ediatda.Validar();
-            repoCabaña.Update(ediatda);
+            repoCabaña.EditarCabaña(ediatda,email);
         }
     }
 }

@@ -44,15 +44,15 @@ namespace Dominio_Interfaces.EnitdadesNegocio
             {
                 TimeSpan cantidadDiasAlquiler = FechaAlquilerHasta - FechaAlquilerDesde;
                 int diferenciaEnDias = cantidadDiasAlquiler.Days;
-                throw new ExepcionesAlquileresCabaña("El precio no puede ser menor a 1" + Cabaña.PrecioPorDia+"  +  " + diferenciaEnDias);
+                throw new ExepcionesAlquileresCabaña("The price cannot be less than 1" + Cabaña.PrecioPorDia+"  +  " + diferenciaEnDias);
             }
             if(FechaAlquilerDesde==null || FechaAlquilerHasta==null || FechaAlquilerDesde > FechaAlquilerHasta)
             {
-                throw new ExepcionesAlquileresCabaña("Las Fechas no pueden ser vacias ademas la fecha de inicio debe ser menor a la fecha final");
+                throw new ExepcionesAlquileresCabaña("The Dates cannot be null and the Start Date cannot be less than the From Date");
             }
             if(UsuarioId == Cabaña.Usuario.Id)
             {
-                throw new ExepcionesAlquileresCabaña("El dueño de la cabaña no puede alquilar sus propias cabañaas");
+                throw new ExepcionesAlquileresCabaña("The cabin owner cannot Rentaltheir own cabins");
             }
         }
     }

@@ -40,15 +40,14 @@ namespace WebAPIObligatorio.Controllers
 
         #region DOCUMENTACION API
         /// <summary>
-        /// Trae todos los tipos de cabañas
+        /// Get all types of cabins
         /// </summary>
-        /// <returns>Retornará 404 Not Found si no hay ningun tipo de cabaña registrado
-        /// 500 ante errores de servidor o base de datos y 200 OK si todo salio bien</returns>
+        /// <returns>Returns 404 Not Found if not exists any Type Of Cabin in the sistem
+        /// 500 for server or database errors and 200 OK if everything went well</returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         #endregion
-        // GET: api/<TipoCabañaController>
         [HttpGet]
         public IActionResult Get()
         {
@@ -66,13 +65,14 @@ namespace WebAPIObligatorio.Controllers
 
         #region DOCUMENTACION API
         /// <summary>
-        /// Obtiene un tipo de cabaña por su id
+        /// Gets Type of Cabin by Id
         /// </summary>
-        /// <param name="id"> Id del tipo de cabaña que se quiere buscar</param>
-        /// <returns>Retornará 400 Bad Request: Si el id es no es valido (ej: menor a 0)
-        /// 404 Not Found si no existe ningun tipo de cabaña con ese id
-        /// 500 ante errores de servidor o base de datos</returns>
-        /// 200 OK si se encontro correctamente el tipo de cabañá
+        /// <param name="id"> Id of the Type of Cabin to search </param>
+        /// <returns>Returns 400 Bad Request: If the id is less than zero
+        /// 404 Not Found if there is no type of cabin with that id
+        /// Returns 500 for errors in the server or database
+        /// Returns 200 OK succes with the Type of Cabin
+        /// </returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -97,18 +97,18 @@ namespace WebAPIObligatorio.Controllers
 
         #region DOCUMENTACION API
         /// <summary>
-        /// Crea un Tipo de Cabaña
+        /// Create a Type of Cabin
         /// </summary>
-        /// <param name="tipoCabañaDto"> Objeto tipo de cabaña a crear en formato json </param>
-        /// <returns>Retornará 404 Bad Request: Si el objeto a crear es nulo, si no se cumple con las reglas de negocio(ej: caracteres minimos desc)
-        /// 500 ante errores de servidor o base de datos y 201 si se creó correctamente</returns>
+        /// <param name="tipoCabañaDto"> Type Of Cabin object to create in json format </param>
+        /// <returns>Returns 404 Bad Request: If the object to be created is null, if the business rules are not met (example: characters minimum descripcion)
+        /// Returns 500 for server or database errors
+        /// Returns 200 Ok for success</returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         #endregion
-        // POST api/<TipoCabañaController>
         [HttpPost]
-     //   [Authorize]
+        [Authorize]
         public IActionResult Post([FromBody] TipoCabañaDTO? tipoCabañaDto)
         {
             if (tipoCabañaDto == null) return BadRequest("The Type Of Cabin to create cannot be null");
@@ -130,19 +130,21 @@ namespace WebAPIObligatorio.Controllers
 
         #region DOCUMENTACION API
         /// <summary>
-        /// Edita un Tipo de Cabaña
+        /// Edit a Type Of Cabin
         /// </summary>
-        /// <param name="id"> Id de tipo int correspondiente al id  del tipo de cabaña a editar </param>
-        /// <param name="tipoCabañaDto"> Objeto tipo de cabaña a editar en formato json </param>
-        /// <returns>Retornará 404 Bad Request: Si el id es  y el tipo no son validos o si no se cumplen con las reglas de negocio (ej: minimo de caracatertes en desc)
-        /// 500 ante errores de servidor o base de datos</returns>
+        /// <param name="id"> Int type id corresponding to the id of the type of cabin to edit </param>
+        /// <param name="tipoCabañaDto"> Type Of Cabin object to edit in json format </param>
+        /// <param name="email">Email of the user who is trying to update the Type Of Cabin</param>
+        /// <returns>Returns 404 Bad Request: If the Type Of Cabin does not exist in the system - If the user with that email is not an administrator
+        /// Returns 500 for errors in the server or database
+        /// Returns 200 OK for success</returns>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         #endregion
-        // PUT api/<TipoCabañaController>/5
+
         [HttpPut("{id}/{email}")]
-        //[Authorize]
+        [Authorize]
         public IActionResult Put(int id, [FromBody] TipoCabañaDTO? tipoCabañaDto,string email)
         {
             if (tipoCabañaDto == null || id!=tipoCabañaDto.Id|| string.IsNullOrEmpty(email)) return BadRequest("To edit a Type of Cabin you need provide the id of Type Cabin and the email of the user that is doing the changes");
@@ -175,18 +177,21 @@ namespace WebAPIObligatorio.Controllers
 
         #region DOCUMENTACION API
         /// <summary>
-        /// Elimina un Tipo de Cabaña
+        /// Delete a Type Of Cabin
         /// </summary>
-        /// <param name="id"> Id de tipo int correspondiente al id  del tipo de cabaña a borrar </param>
-        /// <returns>Retornará 404 Bad Request: Si el id es  menor igual a 0 o el tipo no puede ser eliminado por alguna regla de negocio(ej: es usado por una cabañá)
-        /// 404 Not Found si el tipo de cabaña no existe, 500 error servidor, 204 no content si se borrro correctamente</returns>
+        /// <param name="id"> Id of the Cabin to delete </param>
+        /// <param name="email"> Email of the user who is trying to delete the Type Of Cabin</param>
+        /// <returns>Returns 404 Bad Request: If the id is less than 0 - If the Type Of Cabin is being used by a cabin - If the user trying to delete the Type Of Cabin is not an administrator
+        /// Returns 404 Not Found if the Type Of Cabin does not exist,
+        /// Returns 500 server error,
+        /// Returns 204 no content if deleted successfully</returns>
         [ProducesResponseType(StatusCodes.Status204NoContent)] 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         #endregion
         [HttpDelete("{id}/{email}")]
-        //[Authorize]
+        [Authorize]
         public IActionResult Delete(int id,string email)
         {
             if (id < 0 || string.IsNullOrEmpty(email)) return BadRequest("To Delete a Type of Cabin you need provide the id of Type Cabin and the email of the user that is doing the changes");
@@ -218,11 +223,13 @@ namespace WebAPIObligatorio.Controllers
 
         #region DOCUMENTACION API
         /// <summary>
-        /// Busca un tipo de cabaña por nombre
+        /// Search for a Type Of Cabin by name
         /// </summary>
-        /// <param name="nombre"> nombre de tipo string correspondiente al nombre  del tipo de cabaña a buscar </param>
-        /// <returns>Retornará 400 Bad Request: Si el nombre es nulo 
-        /// 404 Not Found si no existe hay un tipo con ese nombre, 500 error servidor, 201 si todo salio bien</returns>
+        /// <param name="nombre"> Name of the Type Of Cabin to search </param>
+        /// <returns>Returns 400 Bad Request: If name is null
+        /// Returns 404 Not Found if there is no Type Of Cabin with that name
+        /// Returns 500 server error
+        /// Returns 201 with Type Of Cabin</returns>
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
