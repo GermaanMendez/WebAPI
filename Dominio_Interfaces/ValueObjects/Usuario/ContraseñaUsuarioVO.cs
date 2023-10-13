@@ -21,7 +21,7 @@ namespace Dominio_Interfaces.ValueObjects.Usuario
         public void Validar() {
             if (string.IsNullOrEmpty(Valor))
             {
-                throw new ExcepcionesUsuario("La contraseña es obligatoria");
+                throw new ExcepcionesUsuario("The Password cannot be null");
             }
         }
     }

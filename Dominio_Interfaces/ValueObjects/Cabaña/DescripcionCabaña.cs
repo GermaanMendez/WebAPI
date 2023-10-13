@@ -25,15 +25,15 @@ namespace Dominio_Interfaces.ValueObjects.Cabaña
         {
             if (string.IsNullOrEmpty(valor))
             {
-                throw new ExcepcionesCabaña("La descripcion no puede estar vacia");
+                throw new ExcepcionesCabaña("The Description cannot be null");
             }
             if (valor.Length < CantMinCarDescripcionCabaña)
             {
-                throw new ExcepcionesCabaña("La descripción debe tener minimo: " + CantMinCarDescripcionCabaña + " caracteres.");
+                throw new ExcepcionesCabaña("The Description must be have minimum : " + CantMinCarDescripcionCabaña + " characters.");
             }
             if (valor.Length > CantMaxCarDescripcionCabaña)
             {
-                throw new ExcepcionesCabaña("La descripción debe maximo minimo: " + CantMaxCarDescripcionCabaña + " caracteres.");
+                throw new ExcepcionesCabaña("The Description must be have maxium : " + CantMaxCarDescripcionCabaña + " characters.");
             }
         }
     }   

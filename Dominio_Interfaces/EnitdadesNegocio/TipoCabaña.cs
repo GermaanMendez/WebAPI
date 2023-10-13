@@ -20,7 +20,7 @@ namespace Dominio_Interfaces.EnitdadesNegocio
         public int Id { get; set; }
 
         [Required]
-        [RegularExpression(@"^[a-zA-ZñÑ]+([a-zA-ZñÑ ]*[a-zA-ZñÑ])?$", ErrorMessage = "El campo Nombre debe contener solamente caracteres alfabéticos y espacios embebidos, pero no al principio o al final.")]
+        [RegularExpression(@"^[a-zA-ZñÑ]+([a-zA-ZñÑ ]*[a-zA-ZñÑ])?$", ErrorMessage = "The Name field must contain only alphabetic characters and embedded spaces, but not at the beginning or end.")]
         [Column(TypeName ="nvarchar(100)")]
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
@@ -29,19 +29,19 @@ namespace Dominio_Interfaces.EnitdadesNegocio
         {
             if (string.IsNullOrEmpty(Nombre))
             {
-                throw new ExcepcionesTipoCabaña("El nombre no puede estar vacío");
+                throw new ExcepcionesTipoCabaña("The Name cannot be null");
             }
             if (string.IsNullOrEmpty(Descripcion))
             {
-                throw new ExcepcionesTipoCabaña("La descripcion no puede estar vacía");
+                throw new ExcepcionesTipoCabaña("The Description cannot be null");
             }
             if (Descripcion.Length < CantMinCarDescripcionTipoCabaña)
             {
-                throw new ExcepcionesTipoCabaña("La descripción debe tener minimo: " + CantMinCarDescripcionTipoCabaña + " caracteres.");
+                throw new ExcepcionesTipoCabaña("The description must have a minimum of: " + CantMinCarDescripcionTipoCabaña + " characters.");
             }
             if (Descripcion.Length > CantMaxCarDescripcionTipoCabaña)
             {
-                throw new ExcepcionesTipoCabaña("La descripción debe maximo minimo: " + CantMaxCarDescripcionTipoCabaña + " caracteres.");
+                throw new ExcepcionesTipoCabaña("The description must have a maxium of: " + CantMaxCarDescripcionTipoCabaña + " characters.");
             }
         }
 

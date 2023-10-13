@@ -20,7 +20,7 @@ namespace Dominio_Interfaces.EnitdadesNegocio
         public int NumeroHabitacion { get; set; }
 
         [Required]
-        [RegularExpression(@"^[a-zA-ZñÑ]+([a-zA-ZñÑ ]*[a-zA-ZñÑ])?$", ErrorMessage = "El campo Nombre debe contener solamente caracteres alfabéticos y espacios embebidos, pero no al principio o al final.")]
+        [RegularExpression(@"^[a-zA-ZñÑ]+([a-zA-ZñÑ ]*[a-zA-ZñÑ])?$", ErrorMessage = "The Name field must contain only alphabetic characters and embedded spaces, but not at the beginning or end.")]
         public NombreCabaña Nombre { get; set; }
         public string Foto { get; set; }
         public DescripcionCabaña Descripcion { get; set; }
@@ -37,16 +37,11 @@ namespace Dominio_Interfaces.EnitdadesNegocio
         public int IdTipoCabaña { get; set; }
         
         public Usuario? Usuario { get; set; }
-        //esto no estaba
-        //[ForeignKey("Usuario")]
-        //public int IdUsuario { get; set; }
-        //esto si estba
-        //public ICollection<AlquilerCabaña> Alquileres { get; set; }
         public void Validar()
         {
             if (CantidadPersonasMax<1)
             {
-                throw new ExcepcionesCabaña("La cabaña debe tener una capacidad minima de 1 persona.");
+                throw new ExcepcionesCabaña("The cabin must have a minimum capacity of 1 person.");
             }
         }
 

@@ -20,13 +20,11 @@ namespace Dominio_Interfaces.EnitdadesNegocio
 
         [Required]
         public Cabaña Cabaña { get; set; }
-        //esto no estaba ademas cabañaId estaba arria de cabaña
         [ForeignKey("Cabaña")]
         public int CabañaId { get; set; }
 
         [Required]
         public Usuario Usuario { get; set; }
-        //esto no estaba ademas usuarioId estaba arria de usuario
         [ForeignKey("Usuario")]
         public int UsuarioId { get; set; }
 

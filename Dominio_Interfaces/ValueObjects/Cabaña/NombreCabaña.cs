@@ -24,7 +24,7 @@ namespace Dominio_Interfaces.ValueObjects.Cabaña
         {
             if (string.IsNullOrEmpty(valor))
             {
-                throw new ExcepcionesCabaña("El nombre no puede estar vacío");
+                throw new ExcepcionesCabaña("The name cannot be null");
             }
         }
     }

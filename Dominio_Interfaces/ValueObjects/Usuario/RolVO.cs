@@ -24,11 +24,11 @@ namespace Dominio_Interfaces.ValueObjects.Usuario
         {
             if (string.IsNullOrEmpty(Valor))
             {
-                throw new ExcepcionesUsuario("Rol es obligatorio");
+                throw new ExcepcionesUsuario("The Rol cannot be null");
             }
             if(Valor.ToLower()!="usuario" && Valor.ToLower() != "administrador")
             {
-                throw new ExcepcionesUsuario("Rol es puede ser usuario o administrador");
+                throw new ExcepcionesUsuario("The role can only be 'usuario' or 'administrador' ");
             }
         }
     }

@@ -140,7 +140,7 @@ namespace Datos.Repositorios
                 throw new ExcepcionesBaseDeDatos("Error connecting to database " + ex.Message);
             }
         }
-        //Obtener alquileres que yo usuario he realizado
+
         
 
         private Usuario ObtenerUsuarioPorEmail(string email)

@@ -25,11 +25,11 @@ namespace Dominio_Interfaces.ValueObjects.Usuario
         {
             if (string.IsNullOrEmpty(Valor))
             {
-                throw new ExcepcionesUsuario("Nombre es obligatorio");
+                throw new ExcepcionesUsuario("The Name cannot be null");
             }
             if (Valor.Length<5)
             {
-                throw new ExcepcionesUsuario("Nombre debe tener minimo 5 caracteres");
+                throw new ExcepcionesUsuario("The Name must be have minimum 5 characters");
             }
         }
 

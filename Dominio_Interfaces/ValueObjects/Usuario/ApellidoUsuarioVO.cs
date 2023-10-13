@@ -26,11 +26,11 @@ namespace Dominio_Interfaces.ValueObjects.Usuario
         {
             if (string.IsNullOrEmpty(Valor))
             {
-                throw new ExcepcionesUsuario("El apellido no puede ser nulo");
+                throw new ExcepcionesUsuario("The Last Name cannot be null");
             }
             if (Valor.Length<5)
             {
-                throw new ExcepcionesUsuario("El apellido debe tener minimo 5 caracteres");
+                throw new ExcepcionesUsuario("The Last Name must be have minimum 5 characters");
             }
         }
 

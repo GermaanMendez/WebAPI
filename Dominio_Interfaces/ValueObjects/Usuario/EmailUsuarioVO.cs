@@ -26,7 +26,7 @@ namespace Dominio_Interfaces.ValueObjects.Usuario
         {
          if (string.IsNullOrEmpty(Valor))
           {
-            throw new ExcepcionesUsuario("Email es obligatorio");
+            throw new ExcepcionesUsuario("The Email cannot be null");
           }
         }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>API PROJECT </name>
+        <name>WebApiCabins</name>
     </assembly>
     <members>
         <member name="M:WebAPIObligatorio.Controllers.AlquilerCabañaController.Post(DTOS.AlquilerCabañaNuevoDTO)">

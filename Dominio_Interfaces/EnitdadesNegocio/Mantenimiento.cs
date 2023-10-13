@@ -17,7 +17,6 @@ namespace Dominio_Interfaces.EnitdadesNegocio
         [Display(Name = "Fecha del mantenimiento")]
         public DateTime FechaMantenimiento  { get; set; }
 
-        //[Range(10, 200, ErrorMessage = "Error, la descripción debe tener entre 10 y 200 caracteres")]
         [StringLength(200, MinimumLength = 10)]
         public string Descripcion { get; set; }
         [Display(Name = "Costo del mantenimiento")]
@@ -32,23 +31,23 @@ namespace Dominio_Interfaces.EnitdadesNegocio
         {
             if (string.IsNullOrEmpty(Descripcion))
             {
-                throw new ExcepcionesMantenimiento("La descripcion no puede estar vacia");
+                throw new ExcepcionesMantenimiento("The Description cannot be null");
             }
             if (Descripcion.Length < 10)
             {
-                throw new ExcepcionesMantenimiento("La descripción no puede tener menos de 10 carácteres.");
+                throw new ExcepcionesMantenimiento("The description cannot be less than 10 characters.");
             }
             if (Descripcion.Length > 200)
             {
-                throw new ExcepcionesMantenimiento("La descripción no puede tener mas de 200 carácteres.");
+                throw new ExcepcionesMantenimiento("The description cannot be more than 200 characters.");
             }
             if (CostoMantenimiento<1)
             {
-                throw new ExcepcionesMantenimiento("El costo de mantenimiento no puede ser menor a 1");
+                throw new ExcepcionesMantenimiento("The maintenance cost cannot be less than 1");
             }
             if (string.IsNullOrEmpty(NombreEmpleado))
             {
-                throw new ExcepcionesMantenimiento("El nombre del emppleado de mantenimiento no puede estar vacio");
+                throw new ExcepcionesMantenimiento("The maintenance employee name cannot be empty");
             }
         }
     }

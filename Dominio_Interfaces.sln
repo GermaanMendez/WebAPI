@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Datos", "Datos\Datos.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExcepcionesPropias", "ExcepcionesPropias\ExcepcionesPropias.csproj", "{26CFBBFB-B0F1-4F68-88A2-A9609606CB84}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPIObligatorio", "WebAPIObligatorio\WebAPIObligatorio.csproj", "{56B7DE1B-782C-4B2F-85A0-B569D163E586}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiCabins", "WebAPIObligatorio\WebApiCabins.csproj", "{56B7DE1B-782C-4B2F-85A0-B569D163E586}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DTOS", "DTOS\DTOS.csproj", "{8F2D5D1C-E794-46FB-AE0E-D1AC1738E3E1}"
 EndProject
