@@ -31,6 +31,10 @@ namespace CasosUso.CU_Cabaña.CasosUso
                 RepoCabaña.Add(nuevaCabaña);
                 nuevo.NumeroHabitacion = nuevaCabaña.NumeroHabitacion;
             }
+            catch (ExcepcionesCabaña ex)
+            {
+                throw new ExcepcionesCabaña(ex.Message);
+            }
             catch (Exception ex)
             {
                 throw new ExcepcionesCabaña(ex.Message);

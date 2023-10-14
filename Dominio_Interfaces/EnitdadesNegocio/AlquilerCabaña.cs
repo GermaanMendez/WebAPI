@@ -40,9 +40,7 @@ namespace Dominio_Interfaces.EnitdadesNegocio
             AsignarPrecio();
             if (Precio < 1)
             {
-                TimeSpan cantidadDiasAlquiler = FechaAlquilerHasta - FechaAlquilerDesde;
-                int diferenciaEnDias = cantidadDiasAlquiler.Days;
-                throw new ExepcionesAlquileresCabaña("The price cannot be less than 1" + Cabaña.PrecioPorDia+"  +  " + diferenciaEnDias);
+                throw new ExepcionesAlquileresCabaña("The price cannot be less than 1");
             }
             if(FechaAlquilerDesde==null || FechaAlquilerHasta==null || FechaAlquilerDesde > FechaAlquilerHasta)
             {

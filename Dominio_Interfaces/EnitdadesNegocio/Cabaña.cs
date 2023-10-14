@@ -43,6 +43,12 @@ namespace Dominio_Interfaces.EnitdadesNegocio
             {
                 throw new ExcepcionesCabaña("The cabin must have a minimum capacity of 1 person.");
             }
+            if (PrecioPorDia < 1)
+            {
+                throw new ExcepcionesCabaña("The cabin must have a minimum daily price of 1 person.");
+            }
+            Descripcion.Validar();
+            Nombre.Validar();
         }
 
   
