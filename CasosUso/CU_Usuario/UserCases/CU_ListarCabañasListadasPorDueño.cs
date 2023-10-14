@@ -30,6 +30,7 @@ namespace CasosUso.CU_Usuario.UserCases
                 Nombre = cab.Nombre.valor,
                 Foto = cab.Foto,
                 Descripcion = cab.Descripcion.valor,
+                PrecioDiario=cab.PrecioPorDia,
                 PoseeJacuzzi = cab.PoseeJacuzzi,
                 EstaHabilitada = cab.EstaHabilitada,
                 CantidadPersonasMax = cab.CantidadPersonasMax,
