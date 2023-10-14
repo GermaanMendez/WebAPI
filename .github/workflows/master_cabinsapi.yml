@@ -2,7 +2,10 @@
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
 name: Build and deploy ASP.Net Core app to Azure Web App - CabinsAPI
-
+env:
+  AZURE_WEBAPP_NAME: CabinsAPI   # set this to your application's name
+  AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
+  NUGET_VERSION: '5.3.x'
 on:
   push:
     branches:
@@ -39,7 +42,7 @@ jobs:
     needs: build
     environment:
       name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+      url: https://cabinsapi.azurewebsites.net/
 
     steps:
       - name: Download artifact from build job
