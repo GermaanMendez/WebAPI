@@ -111,7 +111,7 @@ namespace Datos.Repositorios
                     if (emailUsuario == null || emailUsuario.Length < 1) throw new ExepcionesAlquileresCabaña("invalid credentials");
                     var user = GetUsuarioByEmail(emailUsuario);
                     if (user == null) throw new ExepcionesAlquileresCabaña("The User does not exist");
-                    var resultado = Contexto.AlquileresCabañas.Include(alq => alq.Cabaña).Include(alq=>alq.Usuario).Where(alq => alq.Usuario == user).ToList();
+                    var resultado = Contexto.AlquileresCabañas.Include(alq => alq.Cabaña).ThenInclude(cab=>cab.Usuario).Include(alq=>alq.Usuario).Where(alq => alq.Usuario == user).ToList();
                     return resultado;
                 }
                 catch (ExcepcionesBaseDeDatos ex)
