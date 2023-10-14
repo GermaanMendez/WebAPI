@@ -19,8 +19,8 @@ namespace Dominio_Interfaces.EnitdadesNegocio
         [Key]
         public int NumeroHabitacion { get; set; }
 
-        [Required]
-        [RegularExpression(@"^[a-zA-ZñÑ]+([a-zA-ZñÑ ]*[a-zA-ZñÑ])?$", ErrorMessage = "The Name field must contain only alphabetic characters and embedded spaces, but not at the beginning or end.")]
+        //[Required]
+        //[RegularExpression(@"^[a-zA-ZñÑ]+([a-zA-ZñÑ ]*[a-zA-ZñÑ])?$", ErrorMessage = "The Name field must contain only alphabetic characters and embedded spaces, but not at the beginning or end.")]
         public NombreCabaña Nombre { get; set; }
         public string Foto { get; set; }
         public DescripcionCabaña Descripcion { get; set; }

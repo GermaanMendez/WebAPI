@@ -152,7 +152,7 @@ namespace WebAPIObligatorio.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         #endregion
         [HttpPost]
-        [Authorize]
+        //[Authorize]
         public IActionResult Post([FromBody] CabañaDTO? cabañadto)// CREATE
         {
             if (cabañadto == null) return BadRequest("The cabin to create cannot be null");

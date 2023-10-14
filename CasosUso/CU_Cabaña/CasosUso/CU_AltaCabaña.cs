@@ -33,7 +33,7 @@ namespace CasosUso.CU_Cabaña.CasosUso
             }
             catch (Exception ex)
             {
-                throw new ExcepcionesCabaña("ErrorCU_ALTA: " + ex.Message);
+                throw new ExcepcionesCabaña(ex.Message);
             }
         }
     }

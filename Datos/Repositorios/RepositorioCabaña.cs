@@ -29,21 +29,26 @@ namespace Datos.Repositorios
             try
             {
                 obj.Validar();
+                var existeTipo = Contexto.TiposCabañas.Where(tipo => tipo.Id == obj.IdTipoCabaña).FirstOrDefault();
                 var existeDueño = Contexto.Usuarios.Where(usu => usu.Id == obj.Usuario.Id).FirstOrDefault();
                 var existeYa = Contexto.Cabañas.Where(cab => cab.Nombre.valor == obj.Nombre.valor).FirstOrDefault();
-                if (existeYa==null && existeDueño!=null)
+                if (existeYa==null && existeDueño!=null && existeTipo!=null)
                 {
                     obj.EstaHabilitada = true;
                     Contexto.Cabañas.Add(obj);
                     Contexto.SaveChanges();
                 }
-                else if(existeYa != null && existeDueño == null)
+                else if(existeYa != null)
                 {
                     throw new ExcepcionesCabaña("There is already a cabin with that name in the system");
                 }
-                else
+                else if(existeDueño==null)
                 {
                     throw new ExcepcionesCabaña("The user trying to create the cabin does not exist in the system");
+                }
+                else
+                {
+                    throw new ExcepcionesCabaña("The type of cabin selected does not exist in the system");
                 }
             }
             catch (ExcepcionesBaseDeDatos ex)
