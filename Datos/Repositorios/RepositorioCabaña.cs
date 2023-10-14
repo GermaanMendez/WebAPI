@@ -33,6 +33,7 @@ namespace Datos.Repositorios
                 var existeYa = Contexto.Cabañas.Where(cab => cab.Nombre.valor == obj.Nombre.valor).FirstOrDefault();
                 if (existeYa==null && existeDueño!=null)
                 {
+                    obj.EstaHabilitada = true;
                     Contexto.Cabañas.Add(obj);
                     Contexto.SaveChanges();
                 }
