@@ -43,7 +43,7 @@ namespace Datos.Repositorios
 
         public Usuario RegistrarUsuario(Usuario nuevoUsuario)
         {
-            if(nuevoUsuario==null)
+            if (nuevoUsuario == null)
             {
                 throw new ExcepcionesUsuario("The user to add cannot be null");
             }
@@ -52,12 +52,13 @@ namespace Datos.Repositorios
                 try
                 {
                     var existeUsuario = Contexto.Usuarios.FirstOrDefault(usuario => usuario.Email.Valor == nuevoUsuario.Email.Valor);
-                    if (existeUsuario == null) {
-                            Contexto.Usuarios.Add(nuevoUsuario);
-                            Contexto.SaveChanges();
-                            string mailNuevo = nuevoUsuario.Email.Valor.ToLower();
-                            var usuarioAgregado = Contexto.Usuarios.FirstOrDefault(usuario => usuario.Email.Valor == mailNuevo);
-                            return usuarioAgregado;
+                    if (existeUsuario == null)
+                    {
+                        Contexto.Usuarios.Add(nuevoUsuario);
+                        Contexto.SaveChanges();
+                        string mailNuevo = nuevoUsuario.Email.Valor.ToLower();
+                        var usuarioAgregado = Contexto.Usuarios.FirstOrDefault(usuario => usuario.Email.Valor == mailNuevo);
+                        return usuarioAgregado;
                     }
                     else
                     {
