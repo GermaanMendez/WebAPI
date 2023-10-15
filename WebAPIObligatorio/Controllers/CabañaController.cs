@@ -220,22 +220,17 @@ namespace WebAPIObligatorio.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         #endregion
-        [HttpDelete("{emailDueño}+{idCabañaABorraar}")]
-        [Authorize]
+        [HttpDelete("delete/{emailDueño}/{idCabañaABorraar}")]
+        
         public IActionResult Delete(string emailDueño, int idCabañaABorraar)
         {
-            if (string.IsNullOrEmpty(emailDueño) || idCabañaABorraar <= 0) return BadRequest("Se debe proporcionar una cabaña y un dueño para borrar");
+            if (string.IsNullOrEmpty(emailDueño) || idCabañaABorraar <= 0) return BadRequest("The email of the user and cabin cannot be null");
             try
             {
                 CabañaDTO buscada = CU_buscarCabañaPorId.buscarPorId(idCabañaABorraar);
                 if (buscada == null)
                 {
-                    return BadRequest("La cabaña con id: " + idCabañaABorraar + " no existe en el sistema.");
-                }
-                UsuarioDTO dueño = CU_ObtenerUsuarioPorEmail.GetUsuarioByEmail(emailDueño);
-                if (dueño == null)
-                {
-                    return BadRequest("El usuario con email: " + emailDueño + " no existe.");
+                    return BadRequest("The Caabin with the id: " + idCabañaABorraar + " not exists in the system.");
                 }
                     try
                     {
@@ -244,7 +239,7 @@ namespace WebAPIObligatorio.Controllers
                     }
                     catch (ExcepcionesCabaña ex)
                     {
-                        return BadRequest("No se pudo eliminar la cabaña Error: " + ex.Message);
+                        return BadRequest("Error: " + ex.Message);
                     }
             }
             catch

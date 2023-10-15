@@ -153,7 +153,12 @@ namespace Datos.Repositorios
                 var cabaña = Contexto.Cabañas.Where(cab => cab.NumeroHabitacion == obj.NumeroHabitacion).Include(cab=>cab.Usuario).FirstOrDefault();
                 if(cabaña == null) throw new ExcepcionesCabaña("The cabin that you want to edit does not exist in the system");
                 if(cabaña.Usuario.Email.Valor.ToLower()!=email.ToLower()) throw new ExcepcionesCabaña("The user that is trying to edit the cabin is not the owner of the cabin");
-                Contexto.Cabañas.Update(obj);
+                cabaña.Descripcion = obj.Descripcion;
+                cabaña.Nombre = obj.Nombre;
+                cabaña.PrecioPorDia = obj.PrecioPorDia;
+                cabaña.CantidadPersonasMax = obj.CantidadPersonasMax;
+                cabaña.PoseeJacuzzi= obj.PoseeJacuzzi;
+                cabaña.EstaHabilitada = true;
                 Contexto.SaveChanges();
             }
             catch (ExcepcionesBaseDeDatos ex)
